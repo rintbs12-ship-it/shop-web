@@ -68,7 +68,10 @@ function setupEventListeners() {
   // Image upload area
   const uploadArea = document.getElementById('uploadArea');
   const productImages = document.getElementById('productImages');
-  uploadArea.addEventListener('click', () => productImages.click());
+  uploadArea.addEventListener('click', (e) => {
+    if (e.target.id === 'pasteImageBtn' || e.target.closest('#pasteImageBtn')) return;
+    productImages.click();
+  });
   productImages.addEventListener('change', handleImageSelect);
   uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
   uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
@@ -76,6 +79,45 @@ function setupEventListeners() {
     e.preventDefault();
     uploadArea.classList.remove('dragover');
     handleImageFiles(e.dataTransfer.files);
+  });
+
+  // Paste button
+  document.getElementById('pasteImageBtn').addEventListener('click', async (e) => {
+    e.stopPropagation();
+    try {
+      const items = await navigator.clipboard.read();
+      let found = false;
+      for (const item of items) {
+        for (const type of item.types) {
+          if (type.startsWith('image/')) {
+            const blob = await item.getType(type);
+            const file = new File([blob], `paste-${Date.now()}.png`, { type });
+            handleImageFiles([file]);
+            found = true;
+            showToast('Paste រូបបានហើយ!', 'success');
+          }
+        }
+      }
+      if (!found) showToast('មិនមានរូបក្នុង Clipboard', 'error');
+    } catch(e) {
+      showToast('Ctrl+V ដោយផ្ទាល់ក្នុង upload area', 'info');
+    }
+  });
+
+  // Global Ctrl+V paste when modal is open
+  document.addEventListener('paste', (e) => {
+    if (!document.getElementById('productModal').classList.contains('open')) return;
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) {
+          handleImageFiles([file]);
+          showToast('Paste រូបបានហើយ!', 'success');
+        }
+      }
+    }
   });
 
   // QR upload

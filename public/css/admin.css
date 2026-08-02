@@ -852,3 +852,26 @@ body {
   .modal-body { padding: 16px; }
   .products-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ─── Paste Image Button ──────────────────────────────── */
+.btn-paste-img {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1.5px solid #90caf9;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.btn-paste-img:hover {
+  background: #1565c0;
+  color: white;
+  border-color: #1565c0;
+}
