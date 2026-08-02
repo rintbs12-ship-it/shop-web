@@ -19,6 +19,7 @@ async function loadSettings() {
     if (s.shop_name) {
       document.getElementById('shopName').textContent = s.shop_name;
       document.getElementById('footerName').textContent = s.shop_name;
+      document.getElementById('footerCopyName').textContent = s.shop_name;
       document.title = s.shop_name;
       document.getElementById('heroBannerTitle').textContent = s.banner_title || s.shop_name;
     }
@@ -28,23 +29,27 @@ async function loadSettings() {
 
     if (s.shop_description) {
       document.getElementById('shopDesc').textContent = s.shop_description;
+      const footerDesc = document.getElementById('footerDesc');
+      if (footerDesc) footerDesc.textContent = s.shop_description;
     }
 
     if (s.shop_logo) {
       const logo = document.getElementById('shopLogo');
       logo.src = s.shop_logo;
       logo.style.display = 'block';
+      const footerLogo = document.getElementById('footerLogo');
+      if (footerLogo) { footerLogo.src = s.shop_logo; footerLogo.style.display = 'block'; }
     }
 
     if (s.shop_phone) {
       const phoneEl = document.getElementById('phoneLink');
       phoneEl.href = `tel:${s.shop_phone}`;
       phoneEl.style.display = 'flex';
-      document.getElementById('footerPhone').textContent = `📞 ${s.shop_phone}`;
+      document.getElementById('footerPhone').innerHTML = `<i class="fas fa-phone" style="color:var(--primary)"></i> ${s.shop_phone}`;
     }
 
     if (s.shop_address) {
-      document.getElementById('footerAddress').textContent = `📍 ${s.shop_address}`;
+      document.getElementById('footerAddress').innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> ${s.shop_address}`;
     }
 
     if (s.facebook_link) {
@@ -53,7 +58,7 @@ async function loadSettings() {
       fb.style.display = 'flex';
       const footerFb = document.getElementById('footerFb');
       footerFb.href = s.facebook_link;
-      footerFb.style.display = 'inline';
+      footerFb.style.display = 'flex';
     }
 
     if (s.telegram_link) {
@@ -62,7 +67,7 @@ async function loadSettings() {
       tg.style.display = 'flex';
       const footerTg = document.getElementById('footerTg');
       footerTg.href = s.telegram_link;
-      footerTg.style.display = 'inline';
+      footerTg.style.display = 'flex';
     }
 
   } catch (err) {
