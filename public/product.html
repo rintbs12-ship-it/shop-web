@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ទំនិញ - ហាងរបស់ខ្ញុំ</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a href="/" class="back-btn">
+        <i class="fas fa-arrow-left"></i> ត្រឡប់ក្រោយ
+      </a>
+      <div class="shop-brand">
+        <img id="shopLogo" src="" alt="Logo" style="display:none">
+        <h1 id="shopName">ហាងរបស់ខ្ញុំ</h1>
+      </div>
+      <div style="width:120px"></div>
+    </div>
+  </header>
+
+  <!-- Product Detail -->
+  <main class="main product-detail-page">
+
+    <div id="productLoading" class="loading">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>កំពុងផ្ទុក...</p>
+    </div>
+
+    <div id="productContent" style="display:none">
+
+      <div class="product-detail-layout">
+
+        <!-- Left: Image Gallery -->
+        <div class="product-gallery">
+          <div class="main-image-wrap">
+            <img id="mainImage" src="" alt="Product Image" class="main-image">
+          </div>
+          <div class="thumbnails-wrap">
+            <div class="thumbnails" id="thumbnails"></div>
+          </div>
+        </div>
+
+        <!-- Right: Info -->
+        <div class="product-info">
+          <h2 id="detailName" class="product-name"></h2>
+          <div class="product-price-wrap">
+            <span id="detailPrice" class="product-price"></span>
+          </div>
+
+          <div id="detailDesc" class="product-description"></div>
+
+          <!-- Page Link + Telegram Buttons -->
+          <div class="social-buttons-row">
+            <a id="pageLinkBtn" href="#" target="_blank" class="btn-page-link" style="display:none">
+              <i class="fab fa-facebook"></i> ចុចទីនេះដើម្បីមើលផេក
+            </a>
+            <a id="telegramLinkBtn" href="#" target="_blank" class="btn-telegram-link" style="display:none">
+              <i class="fab fa-telegram"></i> Telegram
+            </a>
+          </div>
+
+          <!-- Buy Button -->
+          <div class="buy-section">
+            <button class="btn-buy" id="buyNowBtn" style="display:none">
+              <i class="fas fa-shopping-cart"></i> ទិញឥឡូវនេះ
+            </button>
+          </div>
+
+          <!-- QR Payment Section (hidden by default, shown in modal) -->
+          <div id="qrSection" style="display:none">
+            <img id="qrImage" src="" alt="QR">
+            <div id="bankName"></div>
+            <div id="accountName"></div>
+            <div id="accountNumber"></div>
+            <div id="phoneNumber"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Related note -->
+      <div class="back-section">
+        <a href="/" class="btn-back">
+          <i class="fas fa-arrow-left"></i> ត្រឡប់ទៅមើលទំនិញផ្សេងទៀត
+        </a>
+      </div>
+
+    </div>
+
+    <div id="productNotFound" style="display:none" class="not-found">
+      <i class="fas fa-box-open"></i>
+      <p>រកមិនឃើញទំនិញនេះទេ</p>
+      <a href="/" class="btn-primary">ត្រឡប់ទៅទំព័រដើម</a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p id="footerName">ហាងរបស់ខ្ញុំ</p>
+    </div>
+  </footer>
+
+  <!-- Buy Modal -->
+  <div id="buyModal" class="buy-modal">
+    <div class="buy-modal-overlay" id="buyModalOverlay"></div>
+    <div class="buy-modal-content">
+
+      <button class="buy-modal-close" id="buyModalClose">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="buy-modal-header">
+        <h3><i class="fas fa-shopping-cart"></i> ទិញទំនិញ</h3>
+        <p id="modalProductName"></p>
+        <div class="modal-price" id="modalProductPrice"></div>
+      </div>
+
+      <!-- QR Section -->
+      <div id="modalQrSection" class="modal-qr-section" style="display:none">
+        <h4 class="modal-section-title">
+          <i class="fas fa-qrcode"></i> បង់ប្រាក់តាម QR
+        </h4>
+        <img id="modalQrImage" src="" alt="QR ABA" class="modal-qr-image">
+        <div class="modal-account-info" id="modalAccountInfo"></div>
+        <p class="modal-qr-note">
+          <i class="fas fa-info-circle"></i>
+          Scan QR ហើយបង់ប្រាក់ រួចទំនាក់ទំនង Telegram
+        </p>
+      </div>
+
+      <!-- Divider -->
+      <div class="modal-divider" id="modalDivider" style="display:none">
+        <span>ឬ</span>
+      </div>
+
+      <!-- Telegram Button -->
+      <div id="modalTelegramSection" class="modal-telegram-section" style="display:none">
+        <h4 class="modal-section-title">
+          <i class="fab fa-telegram"></i> ទំនាក់ទំនងតាម Telegram
+        </h4>
+        <a id="modalTelegramBtn" href="#" target="_blank" class="btn-telegram">
+          <i class="fab fa-telegram"></i> ចុចទំនាក់ទំនងឥឡូវ
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/js/product.js"></script>
+</body>
+</html>
