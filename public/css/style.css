@@ -4,6 +4,8 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html, body { height: 100%; }
+
 :root {
   --primary: #e53935;
   --primary-dark: #b71c1c;
@@ -27,6 +29,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  margin: 0;
+  padding: 0;
 }
 
 .main {
