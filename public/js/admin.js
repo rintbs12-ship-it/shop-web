@@ -341,11 +341,26 @@ function handleImageFiles(files) {
     reader.onload = e => {
       const item = document.createElement('div');
       item.className = 'preview-item';
-      item.innerHTML = `
-        <img src="${e.target.result}" alt="preview">
-        <button class="preview-remove" onclick="removePreviewImage(this, ${newImageFiles.length - 1})">
-          <i class="fas fa-times"></i>
-        </button>`;
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'preview-remove';
+      removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+      removeBtn.type = 'button';
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const allItems = document.querySelectorAll('.preview-item');
+        const itemIndex = Array.from(allItems).indexOf(item);
+        newImageFiles.splice(itemIndex, 1);
+        item.remove();
+        if (newImageFiles.length === 0) {
+          document.getElementById('uploadPlaceholder').style.display = 'flex';
+        }
+      });
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = 'preview';
+      item.appendChild(img);
+      item.appendChild(removeBtn);
       preview.appendChild(item);
       placeholder.style.display = 'none';
     };
@@ -354,8 +369,8 @@ function handleImageFiles(files) {
 }
 
 function removePreviewImage(btn, idx) {
-  newImageFiles.splice(idx, 1);
   btn.closest('.preview-item').remove();
+  newImageFiles.splice(idx, 1);
   if (newImageFiles.length === 0) {
     document.getElementById('uploadPlaceholder').style.display = 'flex';
   }
