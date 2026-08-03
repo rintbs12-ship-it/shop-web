@@ -678,41 +678,43 @@ body {
   /* Floating Telegram — slightly smaller on mobile */
   .float-telegram { width: 50px; height: 50px; font-size: 1.35rem; bottom: 16px; right: 14px; }
 
-  /* Footer - stack vertically on mobile */
+  /* Footer - compact 2-col on mobile, no overlap */
   .footer-top {
     grid-template-columns: 1fr 1fr;
-    padding: 14px 16px 10px;
-    gap: 14px 12px;
+    padding: 8px 12px 10px;
+    gap: 6px 10px;
     align-items: flex-start;
   }
+  /* Row 1: logo + name spans full width */
   .footer-col:first-child {
     grid-column: 1 / -1;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    padding-bottom: 10px;
+    padding-bottom: 6px;
+    margin-bottom: 2px;
   }
   .footer-col:first-child img {
-    width: 36px !important;
-    height: 36px !important;
+    width: 28px !important;
+    height: 28px !important;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
   }
-  .footer-col:first-child h3 { margin: 0; font-size: 0.82rem; }
-  .footer-col:first-child p  { display: block; font-size: 0.72rem; }
+  .footer-col:first-child h3 { margin: 0; font-size: 0.75rem; }
+  .footer-col:first-child p  { display: none; }
+  /* Row 2: contact + social side by side */
   .footer-col:nth-child(2) { display: block; }
-  .footer-col h4 { font-size: 0.76rem; margin-bottom: 4px; }
-  .footer-col p  { font-size: 0.74rem; margin-bottom: 2px; }
-  .footer-social { flex-direction: column; gap: 4px; }
-  .footer-social a { font-size: 0.74rem; padding: 3px 8px; }
-  .footer-bottom { padding: 6px 16px; font-size: 0.68rem; }
-
-  /* Give room so floating Telegram doesn't overlap footer content */
-  .footer { margin-bottom: 0; padding-bottom: 0; }
-  .footer-top { padding-bottom: 70px; }
+  .footer-col h4 { font-size: 0.7rem; margin-bottom: 3px; }
+  .footer-col p  { font-size: 0.68rem; margin-bottom: 1px; }
+  .footer-social { flex-direction: column; gap: 3px; }
+  .footer-social a { font-size: 0.68rem; padding: 2px 6px; }
+  /* Space at bottom so floating Telegram doesn't overlap */
+  .footer-top { padding-bottom: 12px; }
+  .footer-bottom { padding: 5px 12px; font-size: 0.62rem; }
+  .footer { margin-bottom: 70px; }
 
   /* Back button */
   .back-btn { font-size: 0.8rem; padding: 6px 10px; }
