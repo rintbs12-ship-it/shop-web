@@ -101,12 +101,7 @@ app.get('/api/setup-admin', async (req, res) => {
 app.get('/api/settings', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM shop_settings LIMIT 1');
-    const data = result.rows[0] || null;
-    // Attach bot username from env
-    if (data && process.env.TELEGRAM_BOT_USERNAME) {
-      data.bot_username = process.env.TELEGRAM_BOT_USERNAME;
-    }
-    res.json({ success: true, data });
+    res.json({ success: true, data: result.rows[0] || null });
   } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 });
 
