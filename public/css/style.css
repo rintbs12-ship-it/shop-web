@@ -1094,6 +1094,57 @@ body {
 .btn-save-edit { background: #4caf50; color: white; }
 .btn-cancel-edit { background: #f44336; color: white; }
 
+/* ─── Category Tabs ───────────────────────────────────── */
+.category-tabs {
+  max-width: 1200px;
+  margin: 16px auto 0;
+  padding: 0 16px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.category-tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  border: 2px solid var(--border);
+  border-radius: 50px;
+  background: white;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 3px 12px rgba(229,57,53,0.35);
+}
+
+.tab-btn i { font-size: 0.85rem; }
+
+@media (max-width: 768px) {
+  .category-tabs { padding: 0 12px; gap: 6px; margin-top: 12px; }
+  .tab-btn { padding: 7px 14px; font-size: 0.82rem; }
+}
+
 /* ─── Search Bar ──────────────────────────────────────── */
 .search-section {
   max-width: 1200px;

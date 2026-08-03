@@ -65,6 +65,7 @@ db.exec(`
  'ALTER TABLE products ADD COLUMN page_link TEXT',
  'ALTER TABLE products ADD COLUMN telegram_link TEXT',
  'ALTER TABLE products ADD COLUMN discount INTEGER DEFAULT 0',
+ 'ALTER TABLE products ADD COLUMN category TEXT DEFAULT \'all\'',
  'ALTER TABLE shop_settings ADD COLUMN banner_title TEXT',
  'ALTER TABLE shop_settings ADD COLUMN banner_desc TEXT',
 ].forEach(sql => { try { db.exec(sql); } catch(e) {} });

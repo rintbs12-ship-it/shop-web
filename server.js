@@ -100,13 +100,20 @@ app.get('/api/settings', (req, res) => {
 
 // ─── API: Products (Public) ───────────────────────────────────────────────────
 app.get('/api/products', (req, res) => {
-  const products = db.prepare(`
+  const { category } = req.query;
+  let query = `
     SELECT p.*, 
       (SELECT image_path FROM product_images WHERE product_id = p.id AND is_main = 1 LIMIT 1) as main_image
     FROM products p 
-    WHERE p.is_active = 1 
-    ORDER BY p.created_at DESC
-  `).all();
+    WHERE p.is_active = 1
+  `;
+  const params = [];
+  if (category && category !== 'all') {
+    query += ` AND p.category = ?`;
+    params.push(category);
+  }
+  query += ` ORDER BY p.created_at DESC`;
+  const products = db.prepare(query).all(...params);
   res.json({ success: true, data: products });
 });
 
@@ -174,16 +181,16 @@ app.post('/api/admin/products', requireAuth, (req, res) => {
   uploadProducts.fields([{ name: 'images', maxCount: 10 }])(req, res, (err) => {
     if (err) return res.status(400).json({ success: false, message: err.message });
     
-    const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, telegram_link, discount } = req.body;
+    const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, telegram_link, discount, category } = req.body;
     
     if (!name || !price) {
       return res.status(400).json({ success: false, message: 'ឈ្មោះ និងតម្លៃត្រូវការ!' });
     }
     
     const result = db.prepare(`
-      INSERT INTO products (name, description, price, currency, bank_name, account_name, account_number, phone_number, page_link, telegram_link, discount)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', telegram_link || '', parseInt(discount) || 0);
+      INSERT INTO products (name, description, price, currency, bank_name, account_name, account_number, phone_number, page_link, telegram_link, discount, category)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', telegram_link || '', parseInt(discount) || 0, category || 'all');
     
     const productId = result.lastInsertRowid;
     
@@ -205,12 +212,12 @@ app.post('/api/admin/products', requireAuth, (req, res) => {
 });
 
 app.put('/api/admin/products/:id', requireAuth, (req, res) => {
-  const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, telegram_link, discount, is_active } = req.body;
+  const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, telegram_link, discount, category, is_active } = req.body;
   
   db.prepare(`
-    UPDATE products SET name=?, description=?, price=?, currency=?, bank_name=?, account_name=?, account_number=?, phone_number=?, page_link=?, telegram_link=?, discount=?, is_active=?, updated_at=CURRENT_TIMESTAMP
+    UPDATE products SET name=?, description=?, price=?, currency=?, bank_name=?, account_name=?, account_number=?, phone_number=?, page_link=?, telegram_link=?, discount=?, category=?, is_active=?, updated_at=CURRENT_TIMESTAMP
     WHERE id=?
-  `).run(name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', telegram_link || '', parseInt(discount) || 0, is_active !== undefined ? is_active : 1, req.params.id);
+  `).run(name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', telegram_link || '', parseInt(discount) || 0, category || 'all', is_active !== undefined ? is_active : 1, req.params.id);
   
   res.json({ success: true, message: 'Product បានកែប្រែ!' });
 });

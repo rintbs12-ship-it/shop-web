@@ -262,6 +262,7 @@ function openAddProductModal() {
   document.getElementById('productForm').reset();
   document.getElementById('productId').value = '';
   document.getElementById('productBankName').value = '';
+  document.getElementById('productCategory').value = 'all';
   document.getElementById('imagesPreview').innerHTML = '';
   document.getElementById('uploadPlaceholder').style.display = 'flex';
   document.getElementById('qrPreview').style.display = 'none';
@@ -286,6 +287,8 @@ async function openEditModal(id) {
     document.getElementById('productPrice').value = p.price;
     document.getElementById('productCurrency').value = p.currency || 'USD';
     document.getElementById('productDiscount').value = p.discount || 0;
+    document.getElementById('productCurrency').value = p.currency || 'USD';
+    document.getElementById('productCategory').value = p.category || 'all';
     document.getElementById('productDesc').value = p.description || '';
     document.getElementById('productBankName').value = p.bank_name || '';
     document.getElementById('productAccountName').value = p.account_name || '';
@@ -415,6 +418,7 @@ async function saveProduct() {
           price,
           currency: document.getElementById('productCurrency').value,
           discount: document.getElementById('productDiscount').value || 0,
+          category: document.getElementById('productCategory').value || 'all',
           description: document.getElementById('productDesc').value,
           bank_name: document.getElementById('productBankName').value,
           account_name: document.getElementById('productAccountName').value,
@@ -451,6 +455,7 @@ async function saveProduct() {
       fd.append('price', price);
       fd.append('currency', document.getElementById('productCurrency').value);
       fd.append('discount', document.getElementById('productDiscount').value || 0);
+      fd.append('category', document.getElementById('productCategory').value || 'all');
       fd.append('description', document.getElementById('productDesc').value);
       fd.append('bank_name', document.getElementById('productBankName').value);
       fd.append('account_name', document.getElementById('productAccountName').value);
