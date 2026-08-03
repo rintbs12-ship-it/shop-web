@@ -50,22 +50,24 @@ body {
 .header-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 14px 20px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
 }
 
 .shop-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
 }
 
 .shop-brand img {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid rgba(255,255,255,0.5);
@@ -73,23 +75,25 @@ body {
 }
 
 .shop-brand h1 {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.3px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px;
 }
 
 .shop-brand p {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .social-btn {
@@ -605,12 +609,19 @@ body {
 
   /* Footer mobile - stack vertically */
   .footer-top {
-    grid-template-columns: 1fr;
-    padding: 14px 16px 10px;
-    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    padding: 12px 16px 10px;
+    gap: 10px;
   }
-
-  .footer-social { flex-direction: row; flex-wrap: wrap; }
+  .footer-col:first-child {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .footer-social { flex-direction: column; }
 
   /* Product detail mobile */
   .product-detail-layout { padding: 16px; }
