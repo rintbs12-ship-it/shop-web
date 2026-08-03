@@ -270,6 +270,8 @@ function openAddProductModal() {
   if (saved.account_number)  document.getElementById('productAccountNumber').value = saved.account_number;
   if (saved.phone_number)    document.getElementById('productPhoneNumber').value   = saved.phone_number;
   if (saved.telegram_link)   document.getElementById('productTelegramLink').value  = saved.telegram_link;
+  if (saved.description)     document.getElementById('productDesc').value          = saved.description;
+  if (saved.page_link)       document.getElementById('productPageLink').value      = saved.page_link;
 
   document.getElementById('imagesPreview').innerHTML = '';
   document.getElementById('uploadPlaceholder').style.display = 'flex';
@@ -480,6 +482,8 @@ async function saveProduct() {
         account_number: document.getElementById('productAccountNumber').value,
         phone_number:   document.getElementById('productPhoneNumber').value,
         telegram_link:  document.getElementById('productTelegramLink').value,
+        page_link:      document.getElementById('productPageLink').value,
+        description:    document.getElementById('productDesc').value,
       }));
 
       const res = await fetch('/api/admin/products', { method: 'POST', body: fd });
