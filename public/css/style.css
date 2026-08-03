@@ -276,6 +276,7 @@ body {
   border-radius: var(--radius);
   padding: 32px;
   box-shadow: var(--shadow);
+  overflow: visible;
 }
 
 @media (max-width: 860px) {
@@ -283,7 +284,9 @@ body {
 }
 
 /* Gallery */
-.product-gallery { }
+.product-gallery {
+  min-width: 0;
+}
 
 .main-image-wrap {
   border-radius: var(--radius);
@@ -293,61 +296,63 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  max-height: 460px;
 }
 
 .main-image {
   width: 100%;
   height: auto;
-  max-height: 480px;
+  max-height: 460px;
   object-fit: contain;
   display: block;
   transition: opacity 0.3s;
 }
 
+/* Portrait images on mobile — cap tightly */
 @media (max-width: 768px) {
   .main-image-wrap {
-    max-height: 280px;
+    max-height: 240px;
   }
   .main-image {
-    max-height: 280px;
-    object-fit: contain;
+    max-height: 240px;
   }
 }
 
 .thumbnails-wrap {
-  margin-top: 12px;
-  overflow-x: auto;
-  padding-bottom: 6px;
-  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
-  scrollbar-width: none; /* hide scrollbar Firefox */
+  margin-top: 10px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+  /* Must NOT have overflow:hidden on parent — handled by product-gallery */
 }
 
-.thumbnails-wrap::-webkit-scrollbar {
-  display: none; /* hide scrollbar Chrome/Safari */
-}
+.thumbnails-wrap::-webkit-scrollbar { display: none; }
 
 .thumbnails {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   gap: 8px;
-  flex-wrap: nowrap; /* force single row */
+  width: max-content; /* let it grow beyond container so scroll works */
 }
 
 .thumb {
-  width: 80px;
-  height: 80px;
+  width: 72px;
+  height: 72px;
   flex-shrink: 0;
   border-radius: var(--radius-sm);
   overflow: hidden;
   cursor: pointer;
   border: 3px solid transparent;
   transition: border-color 0.2s;
-  touch-action: manipulation;
+  touch-action: pan-x; /* allow horizontal swipe */
 }
 
 @media (max-width: 768px) {
-  .thumb { width: 64px; height: 64px; }
+  .thumb { width: 60px; height: 60px; }
   .thumbnails { gap: 6px; }
-  .thumbnails-wrap { margin-top: 8px; }
 }
 
 .thumb.active { border-color: var(--primary); }
@@ -358,6 +363,7 @@ body {
   object-fit: contain;
   background: #f5f5f5;
   pointer-events: none;
+  -webkit-user-drag: none;
 }
 
 /* Product Info */
