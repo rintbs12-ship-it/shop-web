@@ -4,6 +4,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html { overflow-x: hidden; }
 html, body { height: 100%; }
 
 :root {
@@ -31,6 +32,8 @@ body {
   flex-direction: column;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .main {
@@ -135,6 +138,8 @@ body {
   color: white;
   text-align: center;
   padding: 48px 20px;
+  width: 100%;
+  overflow: hidden;
 }
 
 .hero-content h2 {
@@ -155,6 +160,7 @@ body {
   margin: 0 auto;
   padding: 0 16px 40px;
   width: 100%;
+  overflow-x: hidden;
 }
 
 /* ─── Products Section ────────────────────────────────── */
@@ -602,6 +608,10 @@ body {
 
 /* ─── Responsive ──────────────────────────────────────── */
 @media (max-width: 768px) {
+  /* Prevent horizontal scroll */
+  .header, .hero-banner, .search-section, .products-section,
+  .footer, .main { max-width: 100%; overflow-x: hidden; }
+
   /* Header */
   .header-inner { padding: 8px 12px; gap: 6px; }
   .shop-brand { gap: 8px; }
@@ -611,17 +621,23 @@ body {
   .social-btn { width: 30px; height: 30px; font-size: 0.85rem; }
 
   /* Hero */
-  .hero-banner { padding: 28px 16px; }
-  .hero-content h2 { font-size: 1.2rem; }
-  .hero-content p { font-size: 0.9rem; }
+  .hero-banner { padding: 28px 14px; }
+  .hero-content h2 { font-size: 1.15rem; }
+  .hero-content p { font-size: 0.88rem; }
 
-  /* Products grid */
+  /* Search */
+  .search-section { padding: 12px 12px 0; }
+  .search-input { font-size: 0.88rem; padding: 11px 40px 11px 40px; }
+
+  /* Products grid — 2 columns */
   .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .product-card-name { font-size: 0.85rem; }
-  .product-card-price { font-size: 0.95rem; }
-  .product-card-btn { font-size: 0.78rem; padding: 6px; }
+  .product-card-name { font-size: 0.82rem; }
+  .price-final, .product-card-price { font-size: 0.92rem; }
+  .price-original { font-size: 0.75rem; }
+  .product-card-btn { font-size: 0.76rem; padding: 6px; }
   .product-card-image { aspect-ratio: 4/3; }
   .product-card-image-placeholder { aspect-ratio: 4/3; }
+  .product-card-discount { font-size: 0.68rem; padding: 3px 7px; }
 
   /* Product detail */
   .product-detail-layout {
@@ -629,8 +645,11 @@ body {
     padding: 14px;
     gap: 16px;
   }
-  .product-name { font-size: 1.2rem; }
-  .product-price { font-size: 1.8rem; }
+  .product-name { font-size: 1.15rem; }
+  .product-price { font-size: 1.7rem; }
+
+  /* Floating Telegram — slightly smaller on mobile */
+  .float-telegram { width: 52px; height: 52px; font-size: 1.4rem; bottom: 20px; right: 14px; }
 
   /* Footer - simple 1 column */
   .footer-top {
@@ -1035,3 +1054,153 @@ body {
 
 .btn-save-edit { background: #4caf50; color: white; }
 .btn-cancel-edit { background: #f44336; color: white; }
+
+/* ─── Search Bar ──────────────────────────────────────── */
+.search-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 16px 0;
+  width: 100%;
+}
+
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  color: #999;
+  font-size: 0.95rem;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 44px 12px 44px;
+  border: 2px solid var(--border);
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  min-width: 0;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.search-clear {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px 8px;
+}
+
+.search-result-count {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  margin: 8px 0 0 4px;
+}
+
+/* ─── Discount Badge ──────────────────────────────────── */
+.product-card-discount {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 20px;
+  z-index: 2;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(229,57,53,0.4);
+}
+
+.product-card {
+  position: relative;
+}
+
+.product-card-price-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.price-original {
+  font-size: 0.82rem;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.price-final {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Detail page discount */
+.product-price-original {
+  font-size: 1.2rem;
+  color: #999;
+  text-decoration: line-through;
+  margin-left: 8px;
+}
+
+.discount-badge-detail {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  font-size: 0.88rem;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-left: 10px;
+  vertical-align: middle;
+  box-shadow: 0 2px 10px rgba(229,57,53,0.35);
+}
+
+/* ─── Floating Telegram ───────────────────────────────── */
+.float-telegram {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  width: 58px;
+  height: 58px;
+  background: linear-gradient(135deg, #0088cc, #006aaa);
+  color: white;
+  border-radius: 50%;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 4px 20px rgba(0,136,204,0.5);
+  z-index: 9999;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: tgPulse 2.5s infinite;
+}
+
+.float-telegram:hover {
+  transform: scale(1.12);
+  box-shadow: 0 8px 28px rgba(0,136,204,0.65);
+}
+
+@keyframes tgPulse {
+  0%   { box-shadow: 0 0 0 0   rgba(0,136,204,0.55); }
+  70%  { box-shadow: 0 0 0 14px rgba(0,136,204,0);   }
+  100% { box-shadow: 0 0 0 0   rgba(0,136,204,0);    }
+}

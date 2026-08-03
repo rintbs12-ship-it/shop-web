@@ -36,6 +36,11 @@ async function loadSettings() {
       logo.src = s.shop_logo;
       logo.style.display = 'block';
     }
+    // Floating Telegram
+    const floatBtn = document.getElementById('floatTelegram');
+    if (floatBtn && s.telegram_link) {
+      floatBtn.href = s.telegram_link;
+    }
   } catch (err) {
     console.error('Settings error:', err);
   }
@@ -58,9 +63,20 @@ async function loadProduct(id) {
     // Page title
     document.title = `${p.name} - ហាងរបស់ខ្ញុំ`;
 
-    // Name & Price
+    // Name & Price (with discount support)
     document.getElementById('detailName').textContent = p.name;
-    document.getElementById('detailPrice').textContent = formatPrice(p.price, p.currency);
+    const discount = parseInt(p.discount) || 0;
+    if (discount > 0) {
+      const originalPrice = parseFloat(p.price);
+      const salePrice = originalPrice * (1 - discount / 100);
+      document.getElementById('detailPrice').innerHTML = `
+        ${formatPrice(salePrice, p.currency)}
+        <span class="product-price-original">${formatPrice(originalPrice, p.currency)}</span>
+        <span class="discount-badge-detail">-${discount}%</span>
+      `;
+    } else {
+      document.getElementById('detailPrice').textContent = formatPrice(p.price, p.currency);
+    }
 
     // Description
     if (p.description) {
@@ -149,7 +165,18 @@ function openBuyModal() {
 
   // Fill product info
   document.getElementById('modalProductName').textContent = p.name;
-  document.getElementById('modalProductPrice').textContent = formatPrice(p.price, p.currency);
+  const discount = parseInt(p.discount) || 0;
+  if (discount > 0) {
+    const originalPrice = parseFloat(p.price);
+    const salePrice = originalPrice * (1 - discount / 100);
+    document.getElementById('modalProductPrice').innerHTML = `
+      ${formatPrice(salePrice, p.currency)}
+      <span style="font-size:1rem;color:#999;text-decoration:line-through;font-weight:400;margin-left:6px">${formatPrice(originalPrice, p.currency)}</span>
+      <span style="font-size:0.8rem;background:var(--primary);color:white;padding:2px 8px;border-radius:20px;margin-left:6px;font-weight:700">-${discount}%</span>
+    `;
+  } else {
+    document.getElementById('modalProductPrice').textContent = formatPrice(p.price, p.currency);
+  }
 
   // QR Section
   const qrSection = document.getElementById('modalQrSection');

@@ -174,16 +174,16 @@ app.post('/api/admin/products', requireAuth, (req, res) => {
   uploadProducts.array('images', 10)(req, res, (err) => {
     if (err) return res.status(400).json({ success: false, message: err.message });
     
-    const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, telegram_link } = req.body;
+    const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, telegram_link, discount } = req.body;
     
     if (!name || !price) {
       return res.status(400).json({ success: false, message: 'ឈ្មោះ និងតម្លៃត្រូវការ!' });
     }
     
     const result = db.prepare(`
-      INSERT INTO products (name, description, price, currency, bank_name, account_name, account_number, phone_number, page_link, telegram_link)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', telegram_link || '');
+      INSERT INTO products (name, description, price, currency, bank_name, account_name, account_number, phone_number, page_link, telegram_link, discount)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', telegram_link || '', parseInt(discount) || 0);
     
     const productId = result.lastInsertRowid;
     
@@ -205,12 +205,12 @@ app.post('/api/admin/products', requireAuth, (req, res) => {
 });
 
 app.put('/api/admin/products/:id', requireAuth, (req, res) => {
-  const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, telegram_link, is_active } = req.body;
+  const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, telegram_link, discount, is_active } = req.body;
   
   db.prepare(`
-    UPDATE products SET name=?, description=?, price=?, currency=?, bank_name=?, account_name=?, account_number=?, phone_number=?, page_link=?, telegram_link=?, is_active=?, updated_at=CURRENT_TIMESTAMP
+    UPDATE products SET name=?, description=?, price=?, currency=?, bank_name=?, account_name=?, account_number=?, phone_number=?, page_link=?, telegram_link=?, discount=?, is_active=?, updated_at=CURRENT_TIMESTAMP
     WHERE id=?
-  `).run(name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', telegram_link || '', is_active !== undefined ? is_active : 1, req.params.id);
+  `).run(name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', telegram_link || '', parseInt(discount) || 0, is_active !== undefined ? is_active : 1, req.params.id);
   
   res.json({ success: true, message: 'Product បានកែប្រែ!' });
 });

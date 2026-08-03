@@ -285,6 +285,7 @@ async function openEditModal(id) {
     document.getElementById('productName').value = p.name;
     document.getElementById('productPrice').value = p.price;
     document.getElementById('productCurrency').value = p.currency || 'USD';
+    document.getElementById('productDiscount').value = p.discount || 0;
     document.getElementById('productDesc').value = p.description || '';
     document.getElementById('productBankName').value = p.bank_name || '';
     document.getElementById('productAccountName').value = p.account_name || '';
@@ -413,6 +414,7 @@ async function saveProduct() {
           name,
           price,
           currency: document.getElementById('productCurrency').value,
+          discount: document.getElementById('productDiscount').value || 0,
           description: document.getElementById('productDesc').value,
           bank_name: document.getElementById('productBankName').value,
           account_name: document.getElementById('productAccountName').value,
@@ -448,6 +450,7 @@ async function saveProduct() {
       fd.append('name', name);
       fd.append('price', price);
       fd.append('currency', document.getElementById('productCurrency').value);
+      fd.append('discount', document.getElementById('productDiscount').value || 0);
       fd.append('description', document.getElementById('productDesc').value);
       fd.append('bank_name', document.getElementById('productBankName').value);
       fd.append('account_name', document.getElementById('productAccountName').value);

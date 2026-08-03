@@ -2,7 +2,7 @@
 <html lang="km">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>ហាងរបស់ខ្ញុំ</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -44,6 +44,17 @@
       </div>
     </div>
 
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-wrap">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="ស្វែងរក... (ឧ. 5k followers, page)">
+        <button class="search-clear" id="searchClear" style="display:none">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
     <!-- Products Section -->
     <section class="products-section">
       <div class="section-header">
@@ -82,10 +93,15 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2025 <span id="footerCopyName">ហាងរបស់ខ្ញុំ</span>. រក្សាសិទ្ធិគ្រប់យ៉ាង.</p>
+        <p>© 2026 <span id="footerCopyName">ហាងរបស់ខ្ញុំ</span>. រក្សាសិទ្ធិគ្រប់យ៉ាង.</p>
       </div>
     </div>
   </footer>
+
+  <!-- Floating Telegram Button -->
+  <a id="floatTelegram" href="#" target="_blank" class="float-telegram">
+    <i class="fab fa-telegram"></i>
+  </a>
 
   <script src="/js/index.js"></script>
 </body>

@@ -30,6 +30,7 @@ db.exec(`
     phone_number TEXT,
     page_link TEXT,
     telegram_link TEXT,
+    discount INTEGER DEFAULT 0,
     is_active INTEGER DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -63,6 +64,7 @@ db.exec(`
  'ALTER TABLE products ADD COLUMN phone_number TEXT',
  'ALTER TABLE products ADD COLUMN page_link TEXT',
  'ALTER TABLE products ADD COLUMN telegram_link TEXT',
+ 'ALTER TABLE products ADD COLUMN discount INTEGER DEFAULT 0',
  'ALTER TABLE shop_settings ADD COLUMN banner_title TEXT',
  'ALTER TABLE shop_settings ADD COLUMN banner_desc TEXT',
 ].forEach(sql => { try { db.exec(sql); } catch(e) {} });
