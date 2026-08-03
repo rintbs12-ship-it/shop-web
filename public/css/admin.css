@@ -1066,6 +1066,8 @@ body {
   font-family: inherit;
   outline: none;
   transition: border-color 0.2s;
+  color: #212121;
+  background: white;
 }
 
 .tab-name-input:focus { border-color: var(--primary); }
