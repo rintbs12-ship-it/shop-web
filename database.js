@@ -108,7 +108,7 @@ initDB().catch(err => {
   console.error('❌ DB init error:', err.message);
   console.error('❌ Full error:', err.stack);
   console.error('❌ DATABASE_URL exists:', !!process.env.DATABASE_URL);
-  process.exit(1);
+  // Don't exit — let server start anyway so Railway doesn't mark as crashed
 });
 
 module.exports = pool;
