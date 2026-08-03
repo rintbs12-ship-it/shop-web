@@ -171,7 +171,7 @@ app.get('/api/admin/products', requireAuth, (req, res) => {
 });
 
 app.post('/api/admin/products', requireAuth, (req, res) => {
-  uploadProducts.array('images', 10)(req, res, (err) => {
+  uploadProducts.fields([{ name: 'images', maxCount: 10 }])(req, res, (err) => {
     if (err) return res.status(400).json({ success: false, message: err.message });
     
     const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, telegram_link, discount } = req.body;
@@ -187,14 +187,14 @@ app.post('/api/admin/products', requireAuth, (req, res) => {
     
     const productId = result.lastInsertRowid;
     
-    // Save images
-    if (req.files && req.files.length > 0) {
+    // Save images (req.files.images when using .fields())
+    const imageFiles = (req.files && req.files.images) ? req.files.images : [];
+    if (imageFiles.length > 0) {
       const insertImage = db.prepare(`
         INSERT INTO product_images (product_id, image_path, is_main, sort_order)
         VALUES (?, ?, ?, ?)
       `);
-      
-      req.files.forEach((file, index) => {
+      imageFiles.forEach((file, index) => {
         const imgUrl = file.path || `/uploads/products/${file.filename}`;
         insertImage.run(productId, imgUrl, index === 0 ? 1 : 0, index);
       });
@@ -264,9 +264,11 @@ app.post('/api/admin/products/:id/qr', requireAuth, (req, res) => {
 
 // ─── API: Admin - Upload More Images ─────────────────────────────────────────
 app.post('/api/admin/products/:id/images', requireAuth, (req, res) => {
-  uploadProducts.array('images', 10)(req, res, (err) => {
+  uploadProducts.fields([{ name: 'images', maxCount: 10 }])(req, res, (err) => {
     if (err) return res.status(400).json({ success: false, message: err.message });
-    if (!req.files || req.files.length === 0) return res.status(400).json({ success: false, message: 'No files uploaded' });
+    
+    const imageFiles = (req.files && req.files.images) ? req.files.images : [];
+    if (imageFiles.length === 0) return res.status(400).json({ success: false, message: 'No files uploaded' });
     
     const existingCount = db.prepare('SELECT COUNT(*) as count FROM product_images WHERE product_id = ?').get(req.params.id).count;
     
@@ -275,7 +277,7 @@ app.post('/api/admin/products/:id/images', requireAuth, (req, res) => {
       VALUES (?, ?, ?, ?)
     `);
     
-    req.files.forEach((file, index) => {
+    imageFiles.forEach((file, index) => {
       const imgUrl = file.path || `/uploads/products/${file.filename}`;
       insertImage.run(req.params.id, imgUrl, existingCount === 0 && index === 0 ? 1 : 0, existingCount + index);
     });
