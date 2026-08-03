@@ -1300,7 +1300,7 @@ body {
 /* ─── Floating Telegram ───────────────────────────────── */
 .float-telegram {
   position: fixed;
-  bottom: 24px;
+  bottom: 80px;
   right: 20px;
   width: 58px;
   height: 58px;
