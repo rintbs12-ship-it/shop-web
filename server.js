@@ -80,6 +80,21 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.ht
 app.get('/product/:id', (req, res) => res.sendFile(path.join(__dirname, 'public', 'product.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
 
+// ─── TEMP: Reset admin password ──────────────────────
+app.get('/api/setup-admin', async (req, res) => {
+  try {
+    const hash = bcrypt.hashSync('admin123', 10);
+    await pool.query(`
+      INSERT INTO admin (username, password) 
+      VALUES ('admin', $1)
+      ON CONFLICT (username) DO UPDATE SET password = $1
+    `, [hash]);
+    res.json({ success: true, message: 'Admin reset: username=admin, password=admin123' });
+  } catch(e) {
+    res.json({ success: false, message: e.message });
+  }
+});
+
 // ─── API: Shop Settings (Public) ─────────────────────────────────────────────
 app.get('/api/settings', async (req, res) => {
   try {
