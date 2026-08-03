@@ -303,6 +303,61 @@ function closeBuyModal() {
   document.body.style.overflow = '';
 }
 
+// ─── Submit Order ─────────────────────────────────────
+async function submitOrder() {
+  const name     = document.getElementById('orderBuyerName').value.trim();
+  const telegram = document.getElementById('orderBuyerTelegram').value.trim().replace(/^@/, '');
+  const phone    = document.getElementById('orderBuyerPhone').value.trim();
+  const msgEl    = document.getElementById('orderMsg');
+  const submitBtn = document.getElementById('orderSubmitBtn');
+
+  // Validate
+  if (!name) return showOrderMsg('សូមវាយឈ្មោះរបស់អ្នក!', 'error');
+  if (!telegram) return showOrderMsg('សូមវាយ Telegram username!', 'error');
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> កំពុងបញ្ជូន...';
+
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        product_id: currentProduct.id,
+        buyer_name: name,
+        buyer_telegram: telegram,
+        buyer_phone: phone
+      })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      showOrderMsg('✅ Order បញ្ជូនជោគជ័យ! រង់ចាំ Admin Confirm...', 'success');
+      submitBtn.innerHTML = '<i class="fas fa-check"></i> បញ្ជូនរួចហើយ!';
+      // Clear fields
+      document.getElementById('orderBuyerName').value = '';
+      document.getElementById('orderBuyerTelegram').value = '';
+      document.getElementById('orderBuyerPhone').value = '';
+    } else {
+      showOrderMsg(data.message || 'Error! សូមព្យាយាមម្តងទៀត', 'error');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> បញ្ជូន Order';
+    }
+  } catch (err) {
+    showOrderMsg('Connection error! សូមព្យាយាមម្តងទៀត', 'error');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> បញ្ជូន Order';
+  }
+}
+
+function showOrderMsg(text, type) {
+  const el = document.getElementById('orderMsg');
+  el.textContent = text;
+  el.className = `order-msg ${type}`;
+  el.style.display = 'block';
+  if (type === 'error') setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
 // ─── Lightbox ─────────────────────────────────────────
 let lightboxImages = [];
 let lightboxIndex  = 0;
