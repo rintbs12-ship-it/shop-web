@@ -73,6 +73,23 @@ async function initDB() {
       )
     `);
 
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS orders (
+        id SERIAL PRIMARY KEY,
+        product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
+        product_name TEXT NOT NULL,
+        product_price REAL NOT NULL,
+        product_image TEXT,
+        buyer_name TEXT NOT NULL,
+        buyer_telegram TEXT NOT NULL,
+        buyer_phone TEXT,
+        status TEXT DEFAULT 'pending',
+        note TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     // Migrations — add columns if missing
     const migrations = [
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS bank_name TEXT`,
