@@ -50,16 +50,6 @@ async function loadSettings() {
       positionAboveFooter();
       window.addEventListener('resize', positionAboveFooter);
     }
-
-    // Set bot start link — use BOT_USERNAME env or fallback
-    const botLink = document.getElementById('botStartLink');
-    if (botLink && s.bot_username) {
-      botLink.href = `https://t.me/${s.bot_username}`;
-    } else if (botLink) {
-      // fallback: hide notice if no bot configured
-      const notice = botLink.closest('.bot-notice');
-      if (notice) notice.style.display = 'none';
-    }
   } catch (err) {
     console.error('Settings error:', err);
   }
