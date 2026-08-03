@@ -678,38 +678,41 @@ body {
   /* Floating Telegram — slightly smaller on mobile */
   .float-telegram { width: 50px; height: 50px; font-size: 1.35rem; bottom: 16px; right: 14px; }
 
-  /* Footer - compact horizontal row on mobile */
+  /* Footer - stack vertically on mobile */
   .footer-top {
-    grid-template-columns: auto 1fr auto;
-    padding: 6px 12px;
-    gap: 8px;
-    align-items: center;
+    grid-template-columns: 1fr 1fr;
+    padding: 14px 16px 10px;
+    gap: 14px 12px;
+    align-items: flex-start;
   }
   .footer-col:first-child {
+    grid-column: 1 / -1;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 2px;
-    border-bottom: none;
-    padding: 0;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 10px;
   }
   .footer-col:first-child img {
-    width: 28px !important;
-    height: 28px !important;
+    width: 36px !important;
+    height: 36px !important;
     border-radius: 50%;
     object-fit: cover;
+    flex-shrink: 0;
   }
-  .footer-col:first-child h3 { margin: 0; font-size: 0.62rem; text-align: center; }
-  .footer-col:first-child p  { display: none; }
+  .footer-col:first-child h3 { margin: 0; font-size: 0.82rem; }
+  .footer-col:first-child p  { display: block; font-size: 0.72rem; }
   .footer-col:nth-child(2) { display: block; }
-  .footer-col h4 { font-size: 0.68rem; margin-bottom: 2px; }
-  .footer-col p  { font-size: 0.67rem; margin-bottom: 1px; }
-  .footer-social { flex-direction: column; gap: 3px; }
-  .footer-social a { font-size: 0.67rem; padding: 2px 6px; }
-  .footer-bottom { padding: 5px 12px; font-size: 0.62rem; }
+  .footer-col h4 { font-size: 0.76rem; margin-bottom: 4px; }
+  .footer-col p  { font-size: 0.74rem; margin-bottom: 2px; }
+  .footer-social { flex-direction: column; gap: 4px; }
+  .footer-social a { font-size: 0.74rem; padding: 3px 8px; }
+  .footer-bottom { padding: 6px 16px; font-size: 0.68rem; }
 
-  /* Push footer up so floating Telegram doesn't overlap */
+  /* Give room so floating Telegram doesn't overlap footer content */
   .footer { margin-bottom: 0; padding-bottom: 0; }
+  .footer-top { padding-bottom: 70px; }
 
   /* Back button */
   .back-btn { font-size: 0.8rem; padding: 6px 10px; }
