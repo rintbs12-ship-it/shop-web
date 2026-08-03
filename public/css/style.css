@@ -1532,3 +1532,31 @@ body {
   color: #c62828;
   border: 1px solid #ef9a9a;
 }
+
+/* ─── Bot Notice ──────────────────────────────────────── */
+.bot-notice {
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #1565c0;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.bot-notice i { color: #0088cc; font-size: 1rem; }
+
+.bot-start-link {
+  color: #0088cc;
+  font-weight: 700;
+  text-decoration: none;
+  background: #bbdefb;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.bot-start-link:hover { background: #90caf9; }
