@@ -1066,8 +1066,9 @@ body {
   font-family: inherit;
   outline: none;
   transition: border-color 0.2s;
-  color: #212121;
-  background: white;
+  color: #212121 !important;
+  background: #ffffff !important;
+  -webkit-text-fill-color: #212121 !important;
 }
 
 .tab-name-input:focus { border-color: var(--primary); }
@@ -1081,5 +1082,6 @@ body {
   outline: none;
   cursor: pointer;
   background: white;
+  color: #212121 !important;
   flex-shrink: 0;
 }
