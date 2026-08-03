@@ -141,9 +141,11 @@ function injectDynamicTabs(s) {
   ];
 
   dynamicTabs.forEach(tab => {
-    // Only show if explicitly enabled (=1) AND has a custom name set
+    // Only show if explicitly enabled (=1) AND has a custom name set (not default)
     if (!tab.enabled || parseInt(tab.enabled) !== 1) return;
     if (!tab.name || tab.name.trim() === '') return;
+    // Hide if still using default name like "Tab 4", "Tab 5", "Tab 6"
+    if (/^Tab\s*[456]$/i.test(tab.name.trim())) return;
     const btn = document.createElement('button');
     btn.className = 'tab-btn';
     btn.dataset.tab = tab.key;
