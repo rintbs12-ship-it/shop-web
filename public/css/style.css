@@ -676,37 +676,40 @@ body {
   /* Floating Telegram — slightly smaller on mobile */
   .float-telegram { width: 52px; height: 52px; font-size: 1.4rem; bottom: 20px; right: 14px; }
 
-  /* Footer - compact 1 column on mobile */
+  /* Footer - compact horizontal row on mobile */
   .footer-top {
-    grid-template-columns: 1fr;
-    padding: 10px 14px;
-    gap: 8px;
-  }
-  .footer-col {
-    padding: 0;
+    grid-template-columns: auto 1fr auto;
+    padding: 8px 12px;
+    gap: 10px;
+    align-items: center;
   }
   .footer-col:first-child {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    gap: 3px;
+    border-bottom: none;
+    padding: 0;
   }
   .footer-col:first-child img {
-    width: 36px !important;
-    height: 36px !important;
+    width: 32px !important;
+    height: 32px !important;
     margin-bottom: 0 !important;
+    border-radius: 50%;
+    object-fit: cover;
   }
-  .footer-col:first-child h3 { margin: 0; font-size: 0.82rem; }
-  .footer-col:first-child p  { margin: 0; font-size: 0.72rem; }
-  .footer-col h4 { font-size: 0.74rem; margin-bottom: 4px; }
-  .footer-col p  { font-size: 0.72rem; }
-  .footer-social { flex-direction: row; flex-wrap: wrap; gap: 5px; }
-  .footer-social a { font-size: 0.72rem; padding: 2px 7px; }
-  .footer-bottom { padding: 6px 14px; font-size: 0.68rem; }
-
-  /* Hide middle contact column on small phones — info is in header */
-  /* .footer-col:nth-child(2) { display: none; } — removed, show phone/address */
+  .footer-col:first-child h3 { margin: 0; font-size: 0.65rem; text-align: center; }
+  .footer-col:first-child p  { display: none; }
+  .footer-col:nth-child(2) {
+    display: block;
+    border-bottom: none;
+    padding: 0;
+  }
+  .footer-col h4 { font-size: 0.68rem; margin-bottom: 2px; }
+  .footer-col p  { font-size: 0.68rem; margin-bottom: 1px; }
+  .footer-social { flex-direction: column; gap: 3px; }
+  .footer-social a { font-size: 0.68rem; padding: 2px 6px; }
+  .footer-bottom { padding: 5px 12px; font-size: 0.65rem; }
 
   /* Back button */
   .back-btn { font-size: 0.8rem; padding: 6px 10px; }
