@@ -757,3 +757,143 @@ function escHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+// ═══════════════════════════════════════════════════════
+//  ORDERS
+// ═══════════════════════════════════════════════════════
+
+let allOrders = [];
+
+// Setup orders event listeners (called once on page load)
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('refreshOrdersBtn')?.addEventListener('click', loadOrders);
+  document.getElementById('orderFilterStatus')?.addEventListener('change', renderOrders);
+});
+
+// ─── Load Orders ──────────────────────────────────────
+async function loadOrders() {
+  const container = document.getElementById('ordersContainer');
+  container.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> កំពុងផ្ទុក...</div>`;
+  try {
+    const res  = await fetch('/api/admin/orders');
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+    allOrders = data.data || [];
+    renderOrders();
+  } catch (e) {
+    container.innerHTML = `<div class="orders-empty"><i class="fas fa-exclamation-circle"></i><p>${e.message}</p></div>`;
+  }
+}
+
+// ─── Render Orders Table ──────────────────────────────
+function renderOrders() {
+  const container  = document.getElementById('ordersContainer');
+  const filter     = document.getElementById('orderFilterStatus')?.value || 'all';
+  const filtered   = filter === 'all' ? allOrders : allOrders.filter(o => o.status === filter);
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="orders-empty"><i class="fas fa-shopping-cart"></i><p>មិនមាន Order${filter !== 'all' ? ' (' + filter + ')' : ''}ទេ</p></div>`;
+    return;
+  }
+
+  const rows = filtered.map(o => {
+    const statusClass = `status-${o.status}`;
+    const statusLabel = { pending: '⏳ Pending', confirmed: '🔵 Confirmed', delivered: '✅ Delivered', cancelled: '❌ Cancelled' }[o.status] || o.status;
+    const img = o.product_image
+      ? `<img src="${o.product_image}" class="order-product-img" alt="">`
+      : `<div class="order-product-img" style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#bbb"><i class="fas fa-image"></i></div>`;
+    const date = new Date(o.created_at).toLocaleDateString('km-KH', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    const isDelivered = o.status === 'delivered' || o.status === 'cancelled';
+
+    return `
+      <tr data-id="${o.id}">
+        <td><span style="color:#999;font-size:0.78rem">#${o.id}</span></td>
+        <td>
+          <div class="order-product-cell">
+            ${img}
+            <div>
+              <div class="order-product-name">${escHtml(o.product_name)}</div>
+              <div class="order-price">$${Number(o.product_price).toFixed(2)}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div style="font-weight:600">${escHtml(o.buyer_name)}</div>
+          <a href="https://t.me/${o.buyer_telegram}" target="_blank" class="tg-link">@${escHtml(o.buyer_telegram)}</a>
+          ${o.buyer_phone ? `<div style="font-size:0.75rem;color:#888">${escHtml(o.buyer_phone)}</div>` : ''}
+        </td>
+        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+        <td class="order-date">${date}</td>
+        <td>
+          <div class="order-actions">
+            ${!isDelivered ? `<button class="btn-confirm" onclick="confirmOrder(${o.id}, this)"><i class="fas fa-check"></i> Confirm</button>` : ''}
+            <button class="btn-delete-order" onclick="deleteOrder(${o.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="orders-table-wrap">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ទំនិញ</th>
+            <th>អ្នកទិញ</th>
+            <th>Status</th>
+            <th>ពេលវេលា</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+// ─── Confirm Order ────────────────────────────────────
+async function confirmOrder(id, btn) {
+  if (!confirm('Confirm order នេះ ហើយផ្ញើ Telegram ទៅអ្នកទិញ?')) return;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  try {
+    const res  = await fetch(`/api/admin/orders/${id}/confirm`, { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      showToast('✅ ' + data.message, 'success');
+      loadOrders();
+    } else {
+      showToast('❌ ' + data.message, 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check"></i> Confirm';
+    }
+  } catch (e) {
+    showToast('❌ Connection error!', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Confirm';
+  }
+}
+
+// ─── Delete Order ─────────────────────────────────────
+async function deleteOrder(id) {
+  if (!confirm('លុប Order នេះ?')) return;
+  try {
+    const res  = await fetch(`/api/admin/orders/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      showToast('🗑️ Order បានលុប!', 'success');
+      loadOrders();
+    } else {
+      showToast('❌ ' + data.message, 'error');
+    }
+  } catch (e) {
+    showToast('❌ Connection error!', 'error');
+  }
+}
+
+// ─── Escape HTML helper ───────────────────────────────
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
