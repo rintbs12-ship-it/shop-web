@@ -53,11 +53,12 @@ async function loadSettings() {
 
     // Set bot start link — use BOT_USERNAME env or fallback
     const botLink = document.getElementById('botStartLink');
-    if (botLink) {
-      // Try to build link from telegram_link domain or use generic
-      const tg = s.telegram_link || '';
-      const username = tg.replace(/^https?:\/\/t\.me\//i, '').replace(/^@/, '').split('/')[0];
-      if (username) botLink.href = `https://t.me/${username}`;
+    if (botLink && s.bot_username) {
+      botLink.href = `https://t.me/${s.bot_username}`;
+    } else if (botLink) {
+      // fallback: hide notice if no bot configured
+      const notice = botLink.closest('.bot-notice');
+      if (notice) notice.style.display = 'none';
     }
   } catch (err) {
     console.error('Settings error:', err);
