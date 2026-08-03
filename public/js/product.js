@@ -51,10 +51,13 @@ async function loadSettings() {
       window.addEventListener('resize', positionAboveFooter);
     }
 
-    // Set bot start link
-    if (s.bot_username) {
-      const botLink = document.getElementById('botStartLink');
-      if (botLink) botLink.href = `https://t.me/${s.bot_username}`;
+    // Set bot start link — use BOT_USERNAME env or fallback
+    const botLink = document.getElementById('botStartLink');
+    if (botLink) {
+      // Try to build link from telegram_link domain or use generic
+      const tg = s.telegram_link || '';
+      const username = tg.replace(/^https?:\/\/t\.me\//i, '').replace(/^@/, '').split('/')[0];
+      if (username) botLink.href = `https://t.me/${username}`;
     }
   } catch (err) {
     console.error('Settings error:', err);
