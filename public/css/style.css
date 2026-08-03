@@ -213,7 +213,8 @@ body {
   aspect-ratio: 4/3;
   object-fit: contain;
   background: #f9f9f9;
-  padding: 6px;
+  padding: 4px;
+  display: block;
 }
 
 .product-card-image-placeholder {
@@ -293,15 +294,29 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 200px;
+  aspect-ratio: 1 / 1;
 }
 
 .main-image {
   width: 100%;
-  height: auto;
-  max-height: 520px;
+  height: 100%;
   object-fit: contain;
   display: block;
   transition: opacity 0.3s;
+}
+
+@media (max-width: 768px) {
+  .main-image-wrap {
+    aspect-ratio: unset;
+    min-height: unset;
+    padding: 0;
+  }
+  .main-image {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+  }
 }
 
 .thumbnails-wrap {
