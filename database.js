@@ -17,8 +17,10 @@ async function initDB() {
         username TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
+      )
+    `);
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS products (
         id SERIAL PRIMARY KEY,
         name TEXT NOT NULL,
@@ -37,8 +39,10 @@ async function initDB() {
         is_active INTEGER DEFAULT 1,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
+      )
+    `);
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS product_images (
         id SERIAL PRIMARY KEY,
         product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
@@ -46,8 +50,10 @@ async function initDB() {
         is_main INTEGER DEFAULT 0,
         sort_order INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
+      )
+    `);
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS shop_settings (
         id SERIAL PRIMARY KEY,
         shop_name TEXT DEFAULT 'ហាងរបស់ខ្ញុំ',
@@ -60,7 +66,7 @@ async function initDB() {
         banner_title TEXT,
         banner_desc TEXT,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
+      )
     `);
 
     // Migrations — add columns if missing
@@ -83,7 +89,7 @@ async function initDB() {
     if (adminRes.rows.length === 0) {
       const hash = bcrypt.hashSync('admin123', 10);
       await client.query(`INSERT INTO admin (username, password) VALUES ('admin', $1)`, [hash]);
-      console.log('✅ Default admin: username=admin, password=admin123');
+      console.log('✅ Default admin created: admin / admin123');
     }
 
     // Default settings
