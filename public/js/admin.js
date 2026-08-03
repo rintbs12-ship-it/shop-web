@@ -189,8 +189,11 @@ function navigateTo(page) {
   document.getElementById(`page-${page}`).classList.add('active');
   document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
 
-  const titles = { products: 'Products', settings: 'Settings', password: 'Change Password' };
+  const titles = { products: 'Products', orders: 'Orders', settings: 'Settings', password: 'Change Password' };
   document.getElementById('pageTitle').textContent = titles[page] || page;
+
+  // Load orders when navigating to orders page
+  if (page === 'orders') loadOrders();
 
   // Close sidebar on mobile
   document.getElementById('sidebar').classList.remove('open');
