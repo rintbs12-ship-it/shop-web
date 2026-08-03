@@ -678,11 +678,12 @@ body {
   /* Floating Telegram — slightly smaller on mobile */
   .float-telegram { width: 50px; height: 50px; font-size: 1.35rem; bottom: 16px; right: 14px; }
 
-  /* Footer - compact 2-col on mobile, no overlap */
+  /* Footer - compact on mobile */
+  .footer { margin-bottom: 0; }
   .footer-top {
     grid-template-columns: 1fr 1fr;
-    padding: 8px 12px 10px;
-    gap: 6px 10px;
+    padding: 8px 12px 8px;
+    gap: 4px 10px;
     align-items: flex-start;
   }
   /* Row 1: logo + name spans full width */
@@ -693,28 +694,25 @@ body {
     align-items: center;
     gap: 6px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    padding-bottom: 6px;
+    padding-bottom: 5px;
     margin-bottom: 2px;
   }
   .footer-col:first-child img {
-    width: 28px !important;
-    height: 28px !important;
+    width: 24px !important;
+    height: 24px !important;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
   }
-  .footer-col:first-child h3 { margin: 0; font-size: 0.75rem; }
+  .footer-col:first-child h3 { margin: 0; font-size: 0.72rem; }
   .footer-col:first-child p  { display: none; }
   /* Row 2: contact + social side by side */
   .footer-col:nth-child(2) { display: block; }
-  .footer-col h4 { font-size: 0.7rem; margin-bottom: 3px; }
-  .footer-col p  { font-size: 0.68rem; margin-bottom: 1px; }
-  .footer-social { flex-direction: column; gap: 3px; }
-  .footer-social a { font-size: 0.68rem; padding: 2px 6px; }
-  /* Space at bottom so floating Telegram doesn't overlap */
-  .footer-top { padding-bottom: 12px; }
-  .footer-bottom { padding: 5px 12px; font-size: 0.62rem; }
-  .footer { margin-bottom: 70px; }
+  .footer-col h4 { font-size: 0.68rem; margin-bottom: 2px; }
+  .footer-col p  { font-size: 0.65rem; margin-bottom: 1px; }
+  .footer-social { flex-direction: column; gap: 2px; }
+  .footer-social a { font-size: 0.65rem; padding: 2px 5px; }
+  .footer-bottom { padding: 4px 12px 4px; font-size: 0.60rem; }
 
   /* Back button */
   .back-btn { font-size: 0.8rem; padding: 6px 10px; }
