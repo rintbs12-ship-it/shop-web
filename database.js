@@ -2,8 +2,12 @@ require('dotenv').config();
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 
+// Fallback hardcode if env not loaded
+const DATABASE_URL = process.env.DATABASE_URL || 
+  'postgresql://neondb_owner:npg_D2d1EAuqJhel@ep-mute-salad-ayxoxk2n.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require';
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
