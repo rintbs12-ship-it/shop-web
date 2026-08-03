@@ -150,6 +150,32 @@
         </a>
       </div>
 
+      <!-- Order Form -->
+      <div id="orderFormSection" class="order-form-section">
+        <div class="modal-divider" style="display:flex; margin: 16px 0 12px"><span>ទំព័ររបស់អ្នក</span></div>
+        <h4 class="modal-section-title">
+          <i class="fas fa-user"></i> ព័ត៌មានអ្នកទិញ
+        </h4>
+        <div class="order-form">
+          <div class="order-form-group">
+            <label><i class="fas fa-user"></i> ឈ្មោះ <span class="required">*</span></label>
+            <input type="text" id="orderBuyerName" placeholder="វាយឈ្មោះរបស់អ្នក" maxlength="100">
+          </div>
+          <div class="order-form-group">
+            <label><i class="fab fa-telegram"></i> Telegram Username <span class="required">*</span></label>
+            <input type="text" id="orderBuyerTelegram" placeholder="@username របស់អ្នក" maxlength="100">
+          </div>
+          <div class="order-form-group">
+            <label><i class="fas fa-phone"></i> លេខទូរស័ព្ទ (Optional)</label>
+            <input type="text" id="orderBuyerPhone" placeholder="0XX XXX XXX" maxlength="20">
+          </div>
+          <button class="btn-order-submit" id="orderSubmitBtn" type="button">
+            <i class="fas fa-paper-plane"></i> បញ្ជូន Order
+          </button>
+          <div id="orderMsg" class="order-msg" style="display:none"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 
