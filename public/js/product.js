@@ -212,6 +212,9 @@ function setupBuyModal() {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeBuyModal();
   });
+
+  // Order submit
+  document.getElementById('orderSubmitBtn').addEventListener('click', submitOrder);
 }
 
 function openBuyModal() {
