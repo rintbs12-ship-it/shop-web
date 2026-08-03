@@ -556,59 +556,110 @@ body {
 
 .footer-inner { max-width: 1200px; margin: 0 auto; }
 
+/* One-line bar layout */
 .footer-top {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   gap: 12px;
-  padding: 12px 20px 10px;
+  padding: 6px 16px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  align-items: flex-start;
+  flex-wrap: nowrap;
+  min-height: 0;
 }
 
-.footer-col h3 {
-  font-size: 0.85rem;
+/* Col 1: logo + name inline */
+.footer-col:first-child {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.footer-col:first-child img {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 0 !important;
+}
+.footer-col:first-child h3 {
+  font-size: 0.72rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 3px;
+  white-space: nowrap;
+  margin: 0;
+}
+.footer-col:first-child p { display: none; }
+
+/* Col 2: contact inline */
+.footer-col:nth-child(2) {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.footer-col:nth-child(2) h4 { display: none; }
+
+/* Col 3: social inline */
+.footer-col:nth-child(3) {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.footer-col:nth-child(3) h4 { display: none; }
+
+.footer-col h3 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
 }
 
 .footer-col h4 {
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   padding-bottom: 2px;
   border-bottom: 2px solid var(--primary);
   display: inline-block;
 }
 
 .footer-col p {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   color: #aaa;
-  margin-bottom: 2px;
+  margin: 0;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .footer-social {
   display: flex;
   flex-direction: row;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .footer-social a {
   color: #aaa;
   text-decoration: none;
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   transition: color 0.2s;
-  padding: 3px 8px;
+  padding: 2px 7px;
   border-radius: var(--radius-sm);
   background: rgba(255,255,255,0.05);
+  white-space: nowrap;
 }
 
 .footer-social a:hover { color: white; background: rgba(255,255,255,0.1); }
@@ -617,9 +668,9 @@ body {
 
 .footer-bottom {
   text-align: center;
-  padding: 6px 20px;
+  padding: 4px 16px;
   background: rgba(0,0,0,0.2);
-  font-size: 0.72rem;
+  font-size: 0.60rem;
   color: #888;
 }
 
