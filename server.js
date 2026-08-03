@@ -347,6 +347,107 @@ app.post('/api/admin/change-password', requireAuth, async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 });
 
+// ─── API: Orders (Public) — Create Order ─────────────────────────────────────
+app.post('/api/orders', async (req, res) => {
+  try {
+    const { product_id, buyer_name, buyer_telegram, buyer_phone } = req.body;
+    if (!product_id || !buyer_name || !buyer_telegram) {
+      return res.status(400).json({ success: false, message: 'ព័ត៌មានមិនគ្រប់គ្រាន់!' });
+    }
+
+    // Get product info
+    const productRes = await pool.query('SELECT * FROM products WHERE id = $1 AND is_active = 1', [product_id]);
+    if (productRes.rows.length === 0) return res.status(404).json({ success: false, message: 'Product not found' });
+    const p = productRes.rows[0];
+
+    // Get main image
+    const imgRes = await pool.query('SELECT image_path FROM product_images WHERE product_id = $1 AND is_main = 1 LIMIT 1', [product_id]);
+    const productImage = imgRes.rows[0]?.image_path || null;
+
+    // Calculate sale price
+    const discount = parseInt(p.discount) || 0;
+    const originalPrice = parseFloat(p.price);
+    const salePrice = discount > 0 ? originalPrice * (1 - discount / 100) : originalPrice;
+
+    // Save order
+    const orderRes = await pool.query(`
+      INSERT INTO orders (product_id, product_name, product_price, product_image, buyer_name, buyer_telegram, buyer_phone, status)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending') RETURNING *
+    `, [product_id, p.name, salePrice, productImage, buyer_name.trim(), buyer_telegram.trim().replace(/^@/, ''), buyer_phone || '']);
+
+    const order = orderRes.rows[0];
+
+    // Notify admin via Telegram
+    const settingsRes = await pool.query('SELECT telegram_link FROM shop_settings LIMIT 1');
+    const adminTelegram = settingsRes.rows[0]?.telegram_link?.replace(/^https?:\/\/t\.me\//i, '').replace(/^@/, '') || null;
+    await notifyAdminNewOrder(order, adminTelegram);
+
+    res.json({ success: true, message: 'Order បានបញ្ជូន!', order_id: order.id });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+});
+
+// ─── API: Admin - Get All Orders ──────────────────────────────────────────────
+app.get('/api/admin/orders', requireAuth, async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT o.*, p.page_link, p.telegram_link as product_telegram
+      FROM orders o
+      LEFT JOIN products p ON o.product_id = p.id
+      ORDER BY o.created_at DESC
+    `);
+    res.json({ success: true, data: result.rows });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+});
+
+// ─── API: Admin - Confirm Order & Send to Buyer ───────────────────────────────
+app.post('/api/admin/orders/:id/confirm', requireAuth, async (req, res) => {
+  try {
+    const orderRes = await pool.query(`
+      SELECT o.*, p.page_link, p.discount as product_discount, p.price as product_original_price, p.telegram_link as product_telegram
+      FROM orders o
+      LEFT JOIN products p ON o.product_id = p.id
+      WHERE o.id = $1
+    `, [req.params.id]);
+    if (orderRes.rows.length === 0) return res.status(404).json({ success: false, message: 'Order not found' });
+
+    const order = orderRes.rows[0];
+    if (order.status === 'delivered') return res.json({ success: false, message: 'Order នេះ delivered រួចហើយ!' });
+
+    // Update status
+    await pool.query(`UPDATE orders SET status='delivered', updated_at=CURRENT_TIMESTAMP WHERE id=$1`, [req.params.id]);
+
+    // Get admin telegram for message
+    const settingsRes = await pool.query('SELECT telegram_link, shop_name FROM shop_settings LIMIT 1');
+    const adminTg = settingsRes.rows[0]?.telegram_link?.replace(/^https?:\/\/t\.me\//i, '').replace(/^@/, '') || '';
+    order.admin_telegram = adminTg;
+
+    // Send confirmation to buyer
+    await sendOrderConfirmation(order);
+
+    res.json({ success: true, message: 'Confirmed! ផ្ញើទៅ Telegram គេរួចហើយ!' });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+});
+
+// ─── API: Admin - Delete Order ────────────────────────────────────────────────
+app.delete('/api/admin/orders/:id', requireAuth, async (req, res) => {
+  try {
+    await pool.query('DELETE FROM orders WHERE id = $1', [req.params.id]);
+    res.json({ success: true, message: 'Order បានលុប!' });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+});
+
+// ─── API: Admin - Update Order Status ────────────────────────────────────────
+app.put('/api/admin/orders/:id/status', requireAuth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!['pending', 'confirmed', 'delivered', 'cancelled'].includes(status)) {
+      return res.status(400).json({ success: false, message: 'Status មិនត្រឹមត្រូវ!' });
+    }
+    await pool.query(`UPDATE orders SET status=$1, updated_at=CURRENT_TIMESTAMP WHERE id=$2`, [status, req.params.id]);
+    res.json({ success: true, message: 'Status updated!' });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+});
+
 // ─── Start Server ─────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
