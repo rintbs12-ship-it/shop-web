@@ -137,6 +137,33 @@ async function loadProduct(id) {
             }
           });
         });
+
+        // Mouse wheel scroll on PC
+        const wrap = document.querySelector('.thumbnails-wrap');
+        if (wrap) {
+          wrap.addEventListener('wheel', e => {
+            e.preventDefault();
+            wrap.scrollLeft += e.deltaY;
+          }, { passive: false });
+
+          // Mouse drag scroll on PC
+          let isDown = false, startX, scrollLeft;
+          wrap.addEventListener('mousedown', e => {
+            isDown = true;
+            wrap.style.cursor = 'grabbing';
+            startX = e.pageX - wrap.offsetLeft;
+            scrollLeft = wrap.scrollLeft;
+          });
+          wrap.addEventListener('mouseleave', () => { isDown = false; wrap.style.cursor = 'grab'; });
+          wrap.addEventListener('mouseup', () => { isDown = false; wrap.style.cursor = 'grab'; });
+          wrap.addEventListener('mousemove', e => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - wrap.offsetLeft;
+            wrap.scrollLeft = scrollLeft - (x - startX);
+          });
+          wrap.style.cursor = 'grab';
+        }
       }
     } else {
       document.querySelector('.main-image-wrap').innerHTML = `
