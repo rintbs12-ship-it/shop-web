@@ -106,6 +106,8 @@ async function initDB() {
 
 initDB().catch(err => {
   console.error('❌ DB init error:', err.message);
+  console.error('❌ Full error:', err.stack);
+  console.error('❌ DATABASE_URL exists:', !!process.env.DATABASE_URL);
   process.exit(1);
 });
 
