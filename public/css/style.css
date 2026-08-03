@@ -706,7 +706,7 @@ body {
   .footer-bottom { padding: 6px 14px; font-size: 0.68rem; }
 
   /* Hide middle contact column on small phones — info is in header */
-  .footer-col:nth-child(2) { display: none; }
+  /* .footer-col:nth-child(2) { display: none; } — removed, show phone/address */
 
   /* Back button */
   .back-btn { font-size: 0.8rem; padding: 6px 10px; }
