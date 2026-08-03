@@ -152,6 +152,7 @@ body {
 .hero-content p {
   font-size: 1.1rem;
   opacity: 0.9;
+  white-space: pre-line;
 }
 
 /* ─── Main ────────────────────────────────────────────── */
