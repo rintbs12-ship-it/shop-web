@@ -114,9 +114,27 @@ async function loadProduct(id) {
         thumbsEl.querySelectorAll('.thumb').forEach(thumb => {
           thumb.addEventListener('click', () => {
             mainImg.style.opacity = '0';
-            setTimeout(() => { mainImg.src = thumb.dataset.src; mainImg.style.opacity = '1'; }, 150);
+            setTimeout(() => {
+              mainImg.src = thumb.dataset.src;
+              mainImg.style.opacity = '1';
+            }, 150);
             thumbsEl.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
             thumb.classList.add('active');
+          });
+          // Support touch tap on mobile without scroll conflict
+          let touchStartX = 0;
+          thumb.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+          thumb.addEventListener('touchend', e => {
+            const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+            if (dx < 8) { // tap (not swipe)
+              mainImg.style.opacity = '0';
+              setTimeout(() => {
+                mainImg.src = thumb.dataset.src;
+                mainImg.style.opacity = '1';
+              }, 150);
+              thumbsEl.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+              thumb.classList.add('active');
+            }
           });
         });
       }
