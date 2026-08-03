@@ -638,6 +638,25 @@ async function uploadMoreImages() {
   }
 }
 
+// ─── Update Category Dropdown with Tab Names ──────────
+function updateCategoryDropdown(s) {
+  const select = document.getElementById('productCategory');
+  if (!select) return;
+  // Update tab4/5/6 option labels
+  [4, 5, 6].forEach(n => {
+    const opt = select.querySelector(`option[value="tab${n}"]`);
+    if (!opt) return;
+    const name = s[`tab${n}_name`];
+    const enabled = s[`tab${n}_enabled`];
+    if (name && enabled) {
+      opt.textContent = name;
+      opt.style.display = '';
+    } else {
+      opt.style.display = 'none';
+    }
+  });
+}
+
 // ─── Settings ──────────────────────────────────────────
 async function loadSettingsForm() {
   try {
@@ -659,6 +678,20 @@ async function loadSettingsForm() {
       document.getElementById('logoPreview').style.display = 'block';
       document.getElementById('logoPlaceholder').style.display = 'none';
     }
+
+    // Load tab settings
+    [4, 5, 6].forEach(n => {
+      const nameEl    = document.getElementById(`tab${n}Name`);
+      const iconEl    = document.getElementById(`tab${n}Icon`);
+      const enabledEl = document.getElementById(`tab${n}Enabled`);
+      if (nameEl)    nameEl.value     = s[`tab${n}_name`]    || '';
+      if (iconEl)    iconEl.value     = s[`tab${n}_icon`]    || 'fas fa-tag';
+      if (enabledEl) enabledEl.checked = !!s[`tab${n}_enabled`];
+    });
+
+    // Update product category dropdown with actual tab names
+    updateCategoryDropdown(s);
+
   } catch (err) {
     console.error('Settings load error:', err);
   }
@@ -681,6 +714,13 @@ async function handleSettingsSubmit(e) {
     fd.append('telegram_link',    document.getElementById('shopTelegram').value);
     fd.append('banner_title',     document.getElementById('bannerTitle').value);
     fd.append('banner_desc',      document.getElementById('bannerDesc').value);
+
+    // Tab settings
+    [4, 5, 6].forEach(n => {
+      fd.append(`tab${n}_name`,    document.getElementById(`tab${n}Name`)?.value    || '');
+      fd.append(`tab${n}_icon`,    document.getElementById(`tab${n}Icon`)?.value    || 'fas fa-tag');
+      fd.append(`tab${n}_enabled`, document.getElementById(`tab${n}Enabled`)?.checked ? '1' : '0');
+    });
 
     const logoFile = document.getElementById('logoInput').files[0];
     if (logoFile) fd.append('logo', logoFile);

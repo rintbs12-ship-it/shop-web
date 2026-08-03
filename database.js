@@ -100,6 +100,15 @@ async function initDB() {
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS category TEXT DEFAULT 'all'`,
       `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS banner_title TEXT`,
       `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS banner_desc TEXT`,
+      `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab4_name TEXT DEFAULT 'Tab 4'`,
+      `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab4_icon TEXT DEFAULT 'fas fa-tag'`,
+      `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab4_enabled INTEGER DEFAULT 0`,
+      `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab5_name TEXT DEFAULT 'Tab 5'`,
+      `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab5_icon TEXT DEFAULT 'fas fa-tag'`,
+      `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab5_enabled INTEGER DEFAULT 0`,
+      `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab6_name TEXT DEFAULT 'Tab 6'`,
+      `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab6_icon TEXT DEFAULT 'fas fa-tag'`,
+      `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab6_enabled INTEGER DEFAULT 0`,
     ];
     for (const sql of migrations) {
       try { await client.query(sql); } catch(e) {}

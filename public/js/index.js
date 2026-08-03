@@ -92,6 +92,9 @@ async function loadSettings() {
       }
     }
 
+    // Inject dynamic tabs 4,5,6
+    injectDynamicTabs(s);
+
   } catch (err) {
     console.error('Failed to load settings:', err);
   }
@@ -124,6 +127,40 @@ async function loadProducts() {
         <p>មានបញ្ហាក្នុងការផ្ទុក</p>
       </div>`;
   }
+}
+
+// ─── Inject Dynamic Tabs 4,5,6 ───────────────────────
+function injectDynamicTabs(s) {
+  const tabsContainer = document.getElementById('categoryTabs');
+  if (!tabsContainer) return;
+
+  const dynamicTabs = [
+    { key: 'tab4', name: s.tab4_name, icon: s.tab4_icon, enabled: s.tab4_enabled },
+    { key: 'tab5', name: s.tab5_name, icon: s.tab5_icon, enabled: s.tab5_enabled },
+    { key: 'tab6', name: s.tab6_name, icon: s.tab6_icon, enabled: s.tab6_enabled },
+  ];
+
+  dynamicTabs.forEach(tab => {
+    if (!tab.enabled || !tab.name) return;
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn';
+    btn.dataset.tab = tab.key;
+    btn.innerHTML = `<i class="${tab.icon || 'fas fa-tag'}"></i> ${tab.name}`;
+    tabsContainer.appendChild(btn);
+
+    // Attach click event
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTab = tab.key;
+      const input = document.getElementById('searchInput');
+      const clearBtn = document.getElementById('searchClear');
+      if (input) input.value = '';
+      if (clearBtn) clearBtn.style.display = 'none';
+      updateResultCount(null);
+      applyFilters();
+    });
+  });
 }
 
 // ─── Tabs ──────────────────────────────────────────────
