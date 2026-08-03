@@ -726,8 +726,8 @@ body {
   .product-name { font-size: 1.15rem; }
   .product-price { font-size: 1.7rem; }
 
-  /* Floating Telegram — slightly smaller on mobile, above footer */
-  .float-telegram { width: 46px; height: 46px; font-size: 1.25rem; bottom: 60px; right: 14px; }
+  /* Floating Telegram — slightly smaller on mobile */
+  .float-telegram { width: 46px; height: 46px; font-size: 1.25rem; right: 14px; }
 
   /* Footer - one-line bar on mobile too */
   .footer-top {
