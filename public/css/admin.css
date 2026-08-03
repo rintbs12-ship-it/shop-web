@@ -1060,28 +1060,32 @@ body {
 .tab-name-input {
   flex: 1;
   padding: 7px 12px;
-  border: 2px solid var(--border);
+  border: 2px solid #aaa !important;
   border-radius: var(--radius-sm);
   font-size: 0.88rem;
   font-family: inherit;
   outline: none;
   transition: border-color 0.2s;
-  color: #212121 !important;
+  color: #111111 !important;
   background: #ffffff !important;
-  -webkit-text-fill-color: #212121 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #111111 !important;
 }
 
-.tab-name-input:focus { border-color: var(--primary); }
+.tab-name-input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
 
 .tab-icon-select {
   padding: 7px 10px;
-  border: 2px solid var(--border);
+  border: 2px solid #aaa;
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-family: inherit;
   outline: none;
   cursor: pointer;
   background: white;
-  color: #212121 !important;
+  color: #111111 !important;
   flex-shrink: 0;
 }
