@@ -50,6 +50,12 @@ async function loadSettings() {
       positionAboveFooter();
       window.addEventListener('resize', positionAboveFooter);
     }
+
+    // Set bot start link
+    if (s.bot_username) {
+      const botLink = document.getElementById('botStartLink');
+      if (botLink) botLink.href = `https://t.me/${s.bot_username}`;
+    }
   } catch (err) {
     console.error('Settings error:', err);
   }
