@@ -53,9 +53,9 @@ const imageFilter = (req, file, cb) => {
   else cb(new Error('Only image files allowed!'), false);
 };
 
-const uploadProducts = multer({ storage: makeCloudStorage('products'), fileFilter: imageFilter, limits: { fileSize: 10 * 1024 * 1024 } });
-const uploadQR       = multer({ storage: makeCloudStorage('qr'),       fileFilter: imageFilter, limits: { fileSize: 5  * 1024 * 1024 } });
-const uploadLogo     = multer({ storage: makeCloudStorage('logo'),     fileFilter: imageFilter, limits: { fileSize: 5  * 1024 * 1024 } });
+const uploadProducts = multer({ storage: makeCloudStorage('products'), fileFilter: imageFilter, limits: { fileSize: 10 * 1024 * 1024, fields: 50 } });
+const uploadQR       = multer({ storage: makeCloudStorage('qr'),       fileFilter: imageFilter, limits: { fileSize: 5  * 1024 * 1024, fields: 50 } });
+const uploadLogo     = multer({ storage: makeCloudStorage('logo'),     fileFilter: imageFilter, limits: { fileSize: 5  * 1024 * 1024, fields: 50 } });
 
 // Helper: delete image from Cloudinary
 async function deleteCloudinaryImage(url) {
