@@ -185,6 +185,9 @@ async function loadProduct(id) {
     // Show Buy Button (always show)
     document.getElementById('buyNowBtn').style.display = 'flex';
 
+    // Setup lightbox
+    if (images.length > 0) setupLightbox(images);
+
     content.style.display = 'block';
 
   } catch (err) {
