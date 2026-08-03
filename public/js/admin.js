@@ -261,8 +261,16 @@ function openAddProductModal() {
   document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus"></i> បន្ថែម Product';
   document.getElementById('productForm').reset();
   document.getElementById('productId').value = '';
-  document.getElementById('productBankName').value = '';
   document.getElementById('productCategory').value = 'all';
+
+  // Auto-fill saved payment info
+  const saved = JSON.parse(localStorage.getItem('savedPaymentInfo') || '{}');
+  if (saved.bank_name)       document.getElementById('productBankName').value      = saved.bank_name;
+  if (saved.account_name)    document.getElementById('productAccountName').value   = saved.account_name;
+  if (saved.account_number)  document.getElementById('productAccountNumber').value = saved.account_number;
+  if (saved.phone_number)    document.getElementById('productPhoneNumber').value   = saved.phone_number;
+  if (saved.telegram_link)   document.getElementById('productTelegramLink').value  = saved.telegram_link;
+
   document.getElementById('imagesPreview').innerHTML = '';
   document.getElementById('uploadPlaceholder').style.display = 'flex';
   document.getElementById('qrPreview').style.display = 'none';
@@ -464,6 +472,15 @@ async function saveProduct() {
       fd.append('page_link', document.getElementById('productPageLink').value);
       fd.append('telegram_link', document.getElementById('productTelegramLink').value);
       newImageFiles.forEach(f => fd.append('images', f));
+
+      // Save payment info for next time
+      localStorage.setItem('savedPaymentInfo', JSON.stringify({
+        bank_name:      document.getElementById('productBankName').value,
+        account_name:   document.getElementById('productAccountName').value,
+        account_number: document.getElementById('productAccountNumber').value,
+        phone_number:   document.getElementById('productPhoneNumber').value,
+        telegram_link:  document.getElementById('productTelegramLink').value,
+      }));
 
       const res = await fetch('/api/admin/products', { method: 'POST', body: fd });
       const data = await res.json();
