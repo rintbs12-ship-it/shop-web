@@ -532,33 +532,33 @@ body {
 .footer-top {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  padding: 16px 24px 12px;
+  gap: 12px;
+  padding: 12px 20px 10px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   align-items: flex-start;
 }
 
 .footer-col h3 {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .footer-col h4 {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 6px;
-  padding-bottom: 3px;
+  margin-bottom: 5px;
+  padding-bottom: 2px;
   border-bottom: 2px solid var(--primary);
   display: inline-block;
 }
 
 .footer-col p {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: #aaa;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -567,14 +567,14 @@ body {
 .footer-social {
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .footer-social a {
   color: #aaa;
   text-decoration: none;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -590,9 +590,9 @@ body {
 
 .footer-bottom {
   text-align: center;
-  padding: 8px 24px;
+  padding: 6px 20px;
   background: rgba(0,0,0,0.2);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: #888;
 }
 
@@ -651,26 +651,37 @@ body {
   /* Floating Telegram — slightly smaller on mobile */
   .float-telegram { width: 52px; height: 52px; font-size: 1.4rem; bottom: 20px; right: 14px; }
 
-  /* Footer - simple 1 column */
+  /* Footer - compact 1 column on mobile */
   .footer-top {
     grid-template-columns: 1fr;
-    padding: 14px 16px;
-    gap: 10px;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .footer-col {
+    padding: 0;
   }
   .footer-col:first-child {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding-bottom: 10px;
+    gap: 8px;
+    padding-bottom: 8px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
-  .footer-col:first-child h3 { margin: 0; }
-  .footer-social {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 6px;
+  .footer-col:first-child img {
+    width: 36px !important;
+    height: 36px !important;
+    margin-bottom: 0 !important;
   }
-  .footer-bottom { padding: 8px 16px; font-size: 0.72rem; }
+  .footer-col:first-child h3 { margin: 0; font-size: 0.82rem; }
+  .footer-col:first-child p  { margin: 0; font-size: 0.72rem; }
+  .footer-col h4 { font-size: 0.74rem; margin-bottom: 4px; }
+  .footer-col p  { font-size: 0.72rem; }
+  .footer-social { flex-direction: row; flex-wrap: wrap; gap: 5px; }
+  .footer-social a { font-size: 0.72rem; padding: 2px 7px; }
+  .footer-bottom { padding: 6px 14px; font-size: 0.68rem; }
+
+  /* Hide middle contact column on small phones — info is in header */
+  .footer-col:nth-child(2) { display: none; }
 
   /* Back button */
   .back-btn { font-size: 0.8rem; padding: 6px 10px; }
