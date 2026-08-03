@@ -78,7 +78,18 @@ async function loadSettings() {
       footerTg.style.display = 'flex';
 
       const floatBtn = document.getElementById('floatTelegram');
-      if (floatBtn) floatBtn.href = s.telegram_link;
+      if (floatBtn) {
+        floatBtn.href = s.telegram_link;
+        // Position button above footer dynamically
+        const positionAboveFooter = () => {
+          const footer = document.querySelector('.footer');
+          if (!footer) return;
+          const footerH = footer.offsetHeight;
+          floatBtn.style.bottom = (footerH + 10) + 'px';
+        };
+        positionAboveFooter();
+        window.addEventListener('resize', positionAboveFooter);
+      }
     }
 
   } catch (err) {
