@@ -50,7 +50,6 @@ async function loadSettings() {
       positionAboveFooter();
       window.addEventListener('resize', positionAboveFooter);
     }
-    }
   } catch (err) {
     console.error('Settings error:', err);
   }
