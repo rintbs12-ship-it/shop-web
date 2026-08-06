@@ -360,9 +360,12 @@ app.post('/api/admin/change-password', requireAuth, async (req, res) => {
 // ─── API: Orders (Public) — Create Order ─────────────────────────────────────
 app.post('/api/orders', async (req, res) => {
   try {
-    const { product_id, buyer_name, buyer_telegram, buyer_phone } = req.body;
-    if (!product_id || !buyer_name || !buyer_telegram) {
+    const { product_id, buyer_name, buyer_admin_link, buyer_telegram, buyer_phone } = req.body;
+    if (!product_id || !buyer_name || !buyer_admin_link || !buyer_telegram) {
       return res.status(400).json({ success: false, message: 'ព័ត៌មានមិនគ្រប់គ្រាន់!' });
+    }
+    if (!/^https?:\/\/\S+$/i.test(buyer_admin_link.trim())) {
+      return res.status(400).json({ success: false, message: 'Link Admin មិនត្រឹមត្រូវ!' });
     }
 
     // Get product info
@@ -381,9 +384,9 @@ app.post('/api/orders', async (req, res) => {
 
     // Save order
     const orderRes = await pool.query(`
-      INSERT INTO orders (product_id, product_name, product_price, product_image, buyer_name, buyer_telegram, buyer_phone, status)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending') RETURNING *
-    `, [product_id, p.name, salePrice, productImage, buyer_name.trim(), buyer_telegram.trim().replace(/^@/, ''), buyer_phone || '']);
+      INSERT INTO orders (product_id, product_name, product_price, product_image, buyer_name, buyer_admin_link, buyer_telegram, buyer_phone, status)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'pending') RETURNING *
+    `, [product_id, p.name, salePrice, productImage, buyer_name.trim(), buyer_admin_link.trim(), buyer_telegram.trim().replace(/^@/, ''), buyer_phone || '']);
 
     const order = orderRes.rows[0];
     // Extra product details used by the Telegram admin notification.

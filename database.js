@@ -109,6 +109,7 @@ async function initDB() {
       `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab6_name TEXT DEFAULT 'Tab 6'`,
       `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab6_icon TEXT DEFAULT 'fas fa-tag'`,
       `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS tab6_enabled INTEGER DEFAULT 0`,
+      `ALTER TABLE orders ADD COLUMN IF NOT EXISTS buyer_admin_link TEXT`,
     ];
     for (const sql of migrations) {
       try { await client.query(sql); } catch(e) {}

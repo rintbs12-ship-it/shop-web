@@ -306,13 +306,15 @@ function closeBuyModal() {
 // ─── Submit Order ─────────────────────────────────────
 async function submitOrder() {
   const name     = document.getElementById('orderBuyerName').value.trim();
+  const adminLink = document.getElementById('orderBuyerAdminLink').value.trim();
   const telegram = document.getElementById('orderBuyerTelegram').value.trim().replace(/^@/, '');
   const phone    = document.getElementById('orderBuyerPhone').value.trim();
   const msgEl    = document.getElementById('orderMsg');
   const submitBtn = document.getElementById('orderSubmitBtn');
 
   // Validate
-  if (!name) return showOrderMsg('សូមវាយឈ្មោះរបស់អ្នក!', 'error');
+  if (!name) return showOrderMsg('សូមវាយឈ្មោះផេកថ្មីដែលបងចង់ដូរ!', 'error');
+  if (!/^https?:\/\//i.test(adminLink)) return showOrderMsg('សូមដាក់ Link Admin ឲ្យបានត្រឹមត្រូវ!', 'error');
   if (!telegram) return showOrderMsg('សូមវាយ Telegram username!', 'error');
 
   submitBtn.disabled = true;
@@ -325,6 +327,7 @@ async function submitOrder() {
       body: JSON.stringify({
         product_id: currentProduct.id,
         buyer_name: name,
+        buyer_admin_link: adminLink,
         buyer_telegram: telegram,
         buyer_phone: phone
       })
@@ -336,6 +339,7 @@ async function submitOrder() {
       submitBtn.innerHTML = '<i class="fas fa-check"></i> បញ្ជូនរួចហើយ!';
       // Clear fields
       document.getElementById('orderBuyerName').value = '';
+      document.getElementById('orderBuyerAdminLink').value = '';
       document.getElementById('orderBuyerTelegram').value = '';
       document.getElementById('orderBuyerPhone').value = '';
     } else {

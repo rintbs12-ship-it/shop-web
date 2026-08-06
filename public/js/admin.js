@@ -860,6 +860,7 @@ function renderOrders() {
         <td>
           <div style="font-weight:600">${escHtml(o.buyer_name)}</div>
           <a href="https://t.me/${o.buyer_telegram}" target="_blank" class="tg-link">@${escHtml(o.buyer_telegram)}</a>
+          ${o.buyer_admin_link ? `<div><a href="${escHtml(o.buyer_admin_link)}" target="_blank" rel="noopener" class="tg-link"><i class="fas fa-link"></i> Admin Link</a></div>` : ''}
           ${o.buyer_phone ? `<div style="font-size:0.75rem;color:#888">${escHtml(o.buyer_phone)}</div>` : ''}
         </td>
         <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>

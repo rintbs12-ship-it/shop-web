@@ -74,7 +74,8 @@ async function notifyAdminNewOrder(order, adminTelegram) {
     const msg = `🛒 *Order ថ្មី #${order.id}*\n\n` +
       `📦 ${escMd(order.product_name)}\n` +
       `💰 $${Number(order.product_price).toFixed(2)}\n` +
-      `👤 ${escMd(order.buyer_name)}\n` +
+      `🏳️ ឈ្មោះផេកថ្មី: ${escMd(order.buyer_name)}\n` +
+      `👤 Link Admin: ${escMd(order.buyer_admin_link)}\n` +
       `📱 Telegram: @${escMd(order.buyer_telegram)}\n` +
       (order.buyer_phone ? `📞 ទូរស័ព្ទ: ${escMd(order.buyer_phone)}\n` : '') +
       (order.page_link ? `🔗 Link Page: ${escMd(order.page_link)}\n` : '') +
@@ -85,6 +86,9 @@ async function notifyAdminNewOrder(order, adminTelegram) {
       { text: '❌ បដិសេធ', callback_data: `order_cancel:${order.id}` }
     ];
     const inlineKeyboard = [actionButtons];
+    if (/^https?:\/\//i.test(order.buyer_admin_link || '')) {
+      inlineKeyboard.unshift([{ text: '👤 បើក Link Admin ទទួលផេក', url: order.buyer_admin_link }]);
+    }
     if (/^https?:\/\//i.test(order.page_link || '')) {
       inlineKeyboard.unshift([{ text: '🔗 បើក Link Page', url: order.page_link }]);
     }
