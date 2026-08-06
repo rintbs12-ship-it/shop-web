@@ -390,9 +390,14 @@ app.post('/api/orders', async (req, res) => {
     // Notify admin via Telegram
     const settingsRes = await pool.query('SELECT telegram_link FROM shop_settings LIMIT 1');
     const adminTelegram = settingsRes.rows[0]?.telegram_link?.replace(/^https?:\/\/t\.me\//i, '').replace(/^@/, '') || null;
-    await notifyAdminNewOrder(order, adminTelegram);
+    const adminNotified = await notifyAdminNewOrder(order, adminTelegram);
 
-    res.json({ success: true, message: 'Order បានបញ្ជូន!', order_id: order.id });
+    res.json({
+      success: true,
+      message: 'Order បានបញ្ជូន!',
+      order_id: order.id,
+      admin_notified: adminNotified
+    });
   } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 });
 
