@@ -386,6 +386,14 @@ app.post('/api/orders', async (req, res) => {
     `, [product_id, p.name, salePrice, productImage, buyer_name.trim(), buyer_telegram.trim().replace(/^@/, ''), buyer_phone || '']);
 
     const order = orderRes.rows[0];
+    // Extra product details used by the Telegram admin notification.
+    order.page_link = p.page_link || '';
+    if (order.product_image && !/^https?:\/\//i.test(order.product_image)) {
+      const imagePath = order.product_image.startsWith('/')
+        ? order.product_image
+        : `/${order.product_image}`;
+      order.product_image = `${req.protocol}://${req.get('host')}${imagePath}`;
+    }
 
     // Notify admin via Telegram
     const settingsRes = await pool.query('SELECT telegram_link FROM shop_settings LIMIT 1');

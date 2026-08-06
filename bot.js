@@ -77,17 +77,35 @@ async function notifyAdminNewOrder(order, adminTelegram) {
       `👤 ${escMd(order.buyer_name)}\n` +
       `📱 Telegram: @${escMd(order.buyer_telegram)}\n` +
       (order.buyer_phone ? `📞 ទូរស័ព្ទ: ${escMd(order.buyer_phone)}\n` : '') +
+      (order.page_link ? `🔗 Link Page: ${escMd(order.page_link)}\n` : '') +
       `\n⏳ ចុចConfirm នៅ Admin Panel!`;
 
-    await bot.sendMessage(chatId, msg, {
+    const actionButtons = [
+      { text: '✅ យល់ព្រម', callback_data: `order_confirm:${order.id}` },
+      { text: '❌ បដិសេធ', callback_data: `order_cancel:${order.id}` }
+    ];
+    const inlineKeyboard = [actionButtons];
+    if (/^https?:\/\//i.test(order.page_link || '')) {
+      inlineKeyboard.unshift([{ text: '🔗 បើក Link Page', url: order.page_link }]);
+    }
+    const sendOptions = {
       parse_mode: 'Markdown',
-      reply_markup: {
-        inline_keyboard: [[
-          { text: '✅ យល់ព្រម', callback_data: `order_confirm:${order.id}` },
-          { text: '❌ បដិសេធ', callback_data: `order_cancel:${order.id}` }
-        ]]
+      reply_markup: { inline_keyboard: inlineKeyboard }
+    };
+
+    if (/^https?:\/\//i.test(order.product_image || '')) {
+      try {
+        await bot.sendPhoto(chatId, order.product_image, {
+          ...sendOptions,
+          caption: msg
+        });
+      } catch (photoErr) {
+        console.warn('Telegram product photo failed; sending text notification:', photoErr.message);
+        await bot.sendMessage(chatId, msg, sendOptions);
       }
-    });
+    } else {
+      await bot.sendMessage(chatId, msg, sendOptions);
+    }
     console.log(`✅ Bot: notified admin ${chatId}`);
     return true;
   } catch (err) {
