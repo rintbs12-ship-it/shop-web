@@ -9,8 +9,58 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadSettings();
   await loadProducts();
   setupTabs();
+  setupTabScroller();
   setupSearch();
 });
+
+function setupTabScroller() {
+  const tabs = document.getElementById('categoryTabs');
+  if (!tabs) return;
+
+  let dragging = false;
+  let moved = false;
+  let startX = 0;
+  let startScrollLeft = 0;
+
+  tabs.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'touch') return;
+    dragging = true;
+    moved = false;
+    startX = event.clientX;
+    startScrollLeft = tabs.scrollLeft;
+    tabs.classList.add('dragging');
+    tabs.setPointerCapture(event.pointerId);
+  });
+
+  tabs.addEventListener('pointermove', event => {
+    if (!dragging) return;
+    const distance = event.clientX - startX;
+    if (Math.abs(distance) > 4) moved = true;
+    tabs.scrollLeft = startScrollLeft - distance;
+  });
+
+  const stopDragging = event => {
+    if (!dragging) return;
+    dragging = false;
+    tabs.classList.remove('dragging');
+    if (tabs.hasPointerCapture(event.pointerId)) tabs.releasePointerCapture(event.pointerId);
+  };
+  tabs.addEventListener('pointerup', stopDragging);
+  tabs.addEventListener('pointercancel', stopDragging);
+  tabs.addEventListener('click', event => {
+    if (moved) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      moved = false;
+    }
+  }, true);
+
+  tabs.addEventListener('wheel', event => {
+    if (tabs.scrollWidth <= tabs.clientWidth) return;
+    event.preventDefault();
+    tabs.scrollLeft += event.deltaY || event.deltaX;
+  }, { passive: false });
+}
 
 // ─── Load Shop Settings ───────────────────────────────
 async function loadSettings() {
