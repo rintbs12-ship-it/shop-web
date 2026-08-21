@@ -142,13 +142,25 @@ function setupEventListeners() {
   });
   const bannerArea = document.getElementById('bannerUploadArea');
   const bannerInput = document.getElementById('bannerInput');
+  const removeBannerBtn = document.getElementById('removeBannerBtn');
   bannerArea.addEventListener('click', () => bannerInput.click());
   bannerInput.addEventListener('change', () => {
     const file = bannerInput.files[0];
     if (!file) return;
+    bannerArea.dataset.remove = '0';
     document.getElementById('bannerPreview').src = URL.createObjectURL(file);
     document.getElementById('bannerPreview').style.display = 'block';
     document.getElementById('bannerPlaceholder').style.display = 'none';
+    removeBannerBtn.style.display = 'block';
+  });
+  removeBannerBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    bannerInput.value = '';
+    bannerArea.dataset.remove = '1';
+    document.getElementById('bannerPreview').removeAttribute('src');
+    document.getElementById('bannerPreview').style.display = 'none';
+    document.getElementById('bannerPlaceholder').style.display = 'block';
+    removeBannerBtn.style.display = 'none';
   });
 
   // Password form
@@ -692,6 +704,7 @@ async function loadSettingsForm() {
       document.getElementById('bannerPreview').src = s.banner_image;
       document.getElementById('bannerPreview').style.display = 'block';
       document.getElementById('bannerPlaceholder').style.display = 'none';
+      document.getElementById('removeBannerBtn').style.display = 'block';
     }
 
     // Load tab settings
@@ -741,6 +754,7 @@ async function handleSettingsSubmit(e) {
     if (logoFile) fd.append('logo', logoFile);
     const bannerFile = document.getElementById('bannerInput').files[0];
     if (bannerFile) fd.append('banner', bannerFile);
+    fd.append('remove_banner', document.getElementById('bannerUploadArea').dataset.remove === '1' ? '1' : '0');
 
     const res = await fetch('/api/admin/settings', { method: 'PUT', body: fd });
     const data = await res.json();

@@ -317,7 +317,7 @@ app.put('/api/admin/settings', requireAuth, (req, res) => {
   uploadSettings.fields([{ name: 'logo', maxCount: 1 }, { name: 'banner', maxCount: 1 }])(req, res, async (err) => {
     if (err) return res.status(400).json({ success: false, message: err.message });
     try {
-      const { shop_name, shop_description, shop_phone, shop_address, facebook_link, telegram_link, banner_title, banner_desc,
+      const { shop_name, shop_description, shop_phone, shop_address, facebook_link, telegram_link, banner_title, banner_desc, remove_banner,
               tab4_name, tab4_icon, tab4_enabled, tab5_name, tab5_icon, tab5_enabled, tab6_name, tab6_icon, tab6_enabled } = req.body;
       const current = await pool.query('SELECT * FROM shop_settings LIMIT 1');
       let logoPath = current.rows[0]?.shop_logo || null;
@@ -327,6 +327,10 @@ app.put('/api/admin/settings', requireAuth, (req, res) => {
       if (logoFile) {
         if (logoPath) await deleteCloudinaryImage(logoPath);
         logoPath = logoFile.path;
+      }
+      if (remove_banner === '1' && bannerPath) {
+        await deleteCloudinaryImage(bannerPath);
+        bannerPath = null;
       }
       if (bannerFile) {
         if (bannerPath) await deleteCloudinaryImage(bannerPath);
