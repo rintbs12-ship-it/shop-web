@@ -9,8 +9,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadSettings();
   await loadProducts();
   setupTabs();
+  fitTabLabels();
+  window.addEventListener('resize', fitTabLabels);
   setupSearch();
 });
+
+function fitTabLabels() {
+  document.querySelectorAll('.tab-btn').forEach(button => {
+    button.style.fontSize = '';
+    let size = parseFloat(getComputedStyle(button).fontSize);
+    while (button.scrollWidth > button.clientWidth && size > 8) {
+      size -= 0.5;
+      button.style.fontSize = `${size}px`;
+    }
+  });
+}
 
 // ─── Load Shop Settings ───────────────────────────────
 async function loadSettings() {
