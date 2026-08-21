@@ -1146,42 +1146,33 @@ body {
   max-width: 1200px;
   margin: 16px auto 0;
   padding: 0 16px;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary) #eeeeee;
-  cursor: grab;
-  user-select: none;
-  scroll-behavior: smooth;
-  padding-bottom: 8px;
+  overflow: visible;
 }
 
-.category-tabs.dragging {
-  cursor: grabbing;
-  scroll-behavior: auto;
-}
-
-.category-tabs::-webkit-scrollbar { height: 6px; }
-.category-tabs::-webkit-scrollbar-track { background: #eeeeee; border-radius: 20px; }
-.category-tabs::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 20px; }
+.category-tabs::-webkit-scrollbar { display: none; }
 
 .tab-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 9px 20px;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
   border: 2px solid var(--border);
   border-radius: 50px;
   background: white;
   color: var(--text-light);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
-  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: all 0.2s;
 }
 
@@ -1200,8 +1191,9 @@ body {
 .tab-btn i { font-size: 0.85rem; }
 
 @media (max-width: 768px) {
-  .category-tabs { padding: 0 12px 8px; gap: 6px; margin-top: 12px; }
-  .tab-btn { padding: 7px 14px; font-size: 0.82rem; }
+  .category-tabs { padding: 0 10px; gap: 5px; margin-top: 12px; }
+  .tab-btn { padding: 7px 4px; gap: 3px; font-size: 0.68rem; border-width: 1px; }
+  .tab-btn i { font-size: 0.72rem; }
 }
 
 /* ─── Search Bar ──────────────────────────────────────── */
