@@ -1170,9 +1170,13 @@ body {
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  text-align: center;
+  line-height: 1.35;
+  min-height: 42px;
+  overflow-wrap: anywhere;
   transition: all 0.2s;
 }
 
@@ -1192,7 +1196,7 @@ body {
 
 @media (max-width: 768px) {
   .category-tabs { padding: 0 10px; gap: 5px; margin-top: 12px; }
-  .tab-btn { padding: 7px 4px; gap: 3px; font-size: 0.68rem; border-width: 1px; }
+  .tab-btn { padding: 6px 3px; gap: 3px; font-size: 0.66rem; border-width: 1px; min-height: 44px; }
   .tab-btn i { font-size: 0.72rem; }
 }
 
