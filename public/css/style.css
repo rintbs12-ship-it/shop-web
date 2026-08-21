@@ -142,6 +142,16 @@ body {
   overflow: hidden;
 }
 
+.hero-banner.has-image {
+  min-height: 240px;
+  padding: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-banner.has-image .hero-content { display: none; }
+
 .hero-content h2 {
   font-size: 2.6rem;
   font-weight: 800;
@@ -700,6 +710,7 @@ body {
 
   /* Hero */
   .hero-banner { padding: 28px 14px; }
+  .hero-banner.has-image { min-height: 160px; padding: 0; }
   .hero-content h2 { font-size: 1.5rem; }
   .hero-content p { font-size: 0.88rem; }
 

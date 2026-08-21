@@ -58,6 +58,7 @@ const imageFilter = (req, file, cb) => {
 const uploadProducts = multer({ storage: makeCloudStorage('products'), fileFilter: imageFilter, limits: { fileSize: 10 * 1024 * 1024 } });
 const uploadQR       = multer({ storage: makeCloudStorage('qr'),       fileFilter: imageFilter, limits: { fileSize: 5  * 1024 * 1024 } });
 const uploadLogo     = multer({ storage: makeCloudStorage('logo'),     fileFilter: imageFilter, limits: { fileSize: 5  * 1024 * 1024 } });
+const uploadSettings = multer({ storage: makeCloudStorage('settings'), fileFilter: imageFilter, limits: { fileSize: 10 * 1024 * 1024 } });
 
 // Helper: delete image from Cloudinary
 async function deleteCloudinaryImage(url) {
@@ -313,16 +314,23 @@ app.get('/api/admin/settings', requireAuth, async (req, res) => {
 });
 
 app.put('/api/admin/settings', requireAuth, (req, res) => {
-  uploadLogo.single('logo')(req, res, async (err) => {
+  uploadSettings.fields([{ name: 'logo', maxCount: 1 }, { name: 'banner', maxCount: 1 }])(req, res, async (err) => {
     if (err) return res.status(400).json({ success: false, message: err.message });
     try {
       const { shop_name, shop_description, shop_phone, shop_address, facebook_link, telegram_link, banner_title, banner_desc,
               tab4_name, tab4_icon, tab4_enabled, tab5_name, tab5_icon, tab5_enabled, tab6_name, tab6_icon, tab6_enabled } = req.body;
       const current = await pool.query('SELECT * FROM shop_settings LIMIT 1');
       let logoPath = current.rows[0]?.shop_logo || null;
-      if (req.file) {
+      let bannerPath = current.rows[0]?.banner_image || null;
+      const logoFile = req.files?.logo?.[0];
+      const bannerFile = req.files?.banner?.[0];
+      if (logoFile) {
         if (logoPath) await deleteCloudinaryImage(logoPath);
-        logoPath = req.file.path || `/uploads/logo/${req.file.filename}`;
+        logoPath = logoFile.path;
+      }
+      if (bannerFile) {
+        if (bannerPath) await deleteCloudinaryImage(bannerPath);
+        bannerPath = bannerFile.path;
       }
       await pool.query(`
         UPDATE shop_settings SET shop_name=$1, shop_description=$2, shop_phone=$3, shop_address=$4,
@@ -330,12 +338,14 @@ app.put('/api/admin/settings', requireAuth, (req, res) => {
           tab4_name=$10, tab4_icon=$11, tab4_enabled=$12,
           tab5_name=$13, tab5_icon=$14, tab5_enabled=$15,
           tab6_name=$16, tab6_icon=$17, tab6_enabled=$18,
+          banner_image=$19,
           updated_at=CURRENT_TIMESTAMP
       `, [shop_name, shop_description || '', shop_phone || '', shop_address || '', logoPath,
           facebook_link || '', telegram_link || '', banner_title || '', banner_desc || '',
           tab4_name || 'Tab 4', tab4_icon || 'fas fa-tag', tab4_enabled ? 1 : 0,
           tab5_name || 'Tab 5', tab5_icon || 'fas fa-tag', tab5_enabled ? 1 : 0,
           tab6_name || 'Tab 6', tab6_icon || 'fas fa-tag', tab6_enabled ? 1 : 0,
+          bannerPath,
       ]);
       res.json({ success: true, message: 'Settings បានរក្សាទុក!' });
     } catch(e) { res.status(500).json({ success: false, message: e.message }); }

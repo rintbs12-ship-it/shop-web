@@ -140,6 +140,16 @@ function setupEventListeners() {
       document.getElementById('logoPlaceholder').style.display = 'none';
     }
   });
+  const bannerArea = document.getElementById('bannerUploadArea');
+  const bannerInput = document.getElementById('bannerInput');
+  bannerArea.addEventListener('click', () => bannerInput.click());
+  bannerInput.addEventListener('change', () => {
+    const file = bannerInput.files[0];
+    if (!file) return;
+    document.getElementById('bannerPreview').src = URL.createObjectURL(file);
+    document.getElementById('bannerPreview').style.display = 'block';
+    document.getElementById('bannerPlaceholder').style.display = 'none';
+  });
 
   // Password form
   document.getElementById('passwordForm').addEventListener('submit', handlePasswordChange);
@@ -678,6 +688,11 @@ async function loadSettingsForm() {
       document.getElementById('logoPreview').style.display = 'block';
       document.getElementById('logoPlaceholder').style.display = 'none';
     }
+    if (s.banner_image) {
+      document.getElementById('bannerPreview').src = s.banner_image;
+      document.getElementById('bannerPreview').style.display = 'block';
+      document.getElementById('bannerPlaceholder').style.display = 'none';
+    }
 
     // Load tab settings
     [4, 5, 6].forEach(n => {
@@ -724,6 +739,8 @@ async function handleSettingsSubmit(e) {
 
     const logoFile = document.getElementById('logoInput').files[0];
     if (logoFile) fd.append('logo', logoFile);
+    const bannerFile = document.getElementById('bannerInput').files[0];
+    if (bannerFile) fd.append('banner', bannerFile);
 
     const res = await fetch('/api/admin/settings', { method: 'PUT', body: fd });
     const data = await res.json();

@@ -21,6 +21,12 @@ async function loadSettings() {
 
     const s = data.data;
 
+    if (s.banner_image) {
+      const hero = document.querySelector('.hero-banner');
+      hero.style.backgroundImage = `url("${String(s.banner_image).replace(/["\\]/g, '')}")`;
+      hero.classList.add('has-image');
+    }
+
     if (s.shop_name) {
       document.getElementById('shopName').textContent = s.shop_name;
       document.getElementById('footerName').textContent = s.shop_name;
