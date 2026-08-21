@@ -143,11 +143,13 @@ body {
 }
 
 .hero-banner.has-image {
-  min-height: 240px;
+  min-height: 0;
+  aspect-ratio: 1200 / 260;
   padding: 0;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: #071a35;
 }
 
 .hero-banner.has-image .hero-content { display: none; }
@@ -710,7 +712,7 @@ body {
 
   /* Hero */
   .hero-banner { padding: 28px 14px; }
-  .hero-banner.has-image { min-height: 160px; padding: 0; }
+  .hero-banner.has-image { min-height: 0; padding: 0; }
   .hero-content h2 { font-size: 1.5rem; }
   .hero-content p { font-size: 0.88rem; }
 
