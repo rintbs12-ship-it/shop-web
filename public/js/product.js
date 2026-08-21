@@ -96,6 +96,8 @@ async function loadProduct(id) {
     if (p.page_link) {
       const btn = document.getElementById('pageLinkBtn');
       btn.href = p.page_link;
+      btn.querySelector('i').className = p.link_button_icon || 'fas fa-external-link-alt';
+      btn.querySelector('span').textContent = p.link_button_text || 'មើលព័ត៌មានបន្ថែម';
       btn.style.display = 'inline-flex';
     }
     if (p.telegram_link) {

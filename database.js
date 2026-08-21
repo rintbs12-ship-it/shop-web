@@ -95,6 +95,8 @@ async function initDB() {
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS bank_name TEXT`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS phone_number TEXT`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS page_link TEXT`,
+      `ALTER TABLE products ADD COLUMN IF NOT EXISTS link_button_text TEXT DEFAULT 'មើលព័ត៌មានបន្ថែម'`,
+      `ALTER TABLE products ADD COLUMN IF NOT EXISTS link_button_icon TEXT DEFAULT 'fas fa-external-link-alt'`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS telegram_link TEXT`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS discount INTEGER DEFAULT 0`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS category TEXT DEFAULT 'all'`,

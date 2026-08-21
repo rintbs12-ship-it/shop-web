@@ -287,6 +287,7 @@ function openAddProductModal() {
   document.getElementById('productForm').reset();
   document.getElementById('productId').value = '';
   document.getElementById('productCategory').value = 'all';
+  document.getElementById('productLinkButtonIcon').value = 'fas fa-external-link-alt';
 
   // Auto-fill saved payment info
   const saved = JSON.parse(localStorage.getItem('savedPaymentInfo') || '{}');
@@ -330,6 +331,8 @@ async function openEditModal(id) {
     document.getElementById('productAccountNumber').value = p.account_number || '';
     document.getElementById('productPhoneNumber').value = p.phone_number || '';
     document.getElementById('productPageLink').value = p.page_link || '';
+    document.getElementById('productLinkButtonText').value = p.link_button_text || '';
+    document.getElementById('productLinkButtonIcon').value = p.link_button_icon || 'fas fa-external-link-alt';
     document.getElementById('productTelegramLink').value = p.telegram_link || '';
 
     // Show existing images count
@@ -460,6 +463,8 @@ async function saveProduct() {
           account_number: document.getElementById('productAccountNumber').value,
           phone_number: document.getElementById('productPhoneNumber').value,
           page_link: document.getElementById('productPageLink').value,
+          link_button_text: document.getElementById('productLinkButtonText').value,
+          link_button_icon: document.getElementById('productLinkButtonIcon').value,
           telegram_link: document.getElementById('productTelegramLink').value,
           is_active: 1
         })
@@ -497,6 +502,8 @@ async function saveProduct() {
       fd.append('account_number', document.getElementById('productAccountNumber').value);
       fd.append('phone_number', document.getElementById('productPhoneNumber').value);
       fd.append('page_link', document.getElementById('productPageLink').value);
+      fd.append('link_button_text', document.getElementById('productLinkButtonText').value);
+      fd.append('link_button_icon', document.getElementById('productLinkButtonIcon').value);
       fd.append('telegram_link', document.getElementById('productTelegramLink').value);
       newImageFiles.forEach(f => fd.append('images', f));
 
