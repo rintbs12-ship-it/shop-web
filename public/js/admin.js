@@ -8,9 +8,37 @@ let editingProductId = null;
 let managingImagesProductId = null;
 let newImageFiles = [];
 let newQRFile = null;
+const CUSTOM_TAB_NUMBERS = Array.from({ length: 9 }, (_, index) => index + 4);
+
+function renderExtraCustomTabs() {
+  const container = document.getElementById('customTabsSettings');
+  if (!container || document.getElementById('tab7Name')) return;
+  const icons = [
+    ['fas fa-tag', '🏷️ Tag'], ['fas fa-star', '⭐ Star'], ['fas fa-fire', '🔥 Fire'],
+    ['fas fa-bolt', '⚡ Bolt'], ['fas fa-gem', '💎 Gem'], ['fas fa-crown', '👑 Crown'],
+    ['fas fa-heart', '❤️ Heart'], ['fas fa-gift', '🎁 Gift'], ['fas fa-mobile-alt', '📱 Mobile'],
+    ['fas fa-laptop', '💻 Laptop'], ['fas fa-gamepad', '🎮 Gamepad'], ['fas fa-tshirt', '👕 Tshirt'],
+    ['fas fa-box', '📦 Box'], ['fas fa-film', '🎬 Film'], ['fab fa-facebook', '📘 Facebook'],
+    ['fab fa-tiktok', '🎵 TikTok'], ['fas fa-scissors', '✂️ CapCut'],
+    ['fab fa-telegram', '✈️ Telegram'], ['fas fa-tools', '🛠️ Tool'],
+  ];
+  const iconOptions = icons.map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
+  for (let n = 7; n <= 12; n += 1) {
+    container.insertAdjacentHTML('beforeend', `
+      <div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="checkbox" id="tab${n}Enabled" style="width:18px;height:18px;cursor:pointer;accent-color:#e53935;">
+          <label for="tab${n}Enabled" style="font-weight:700;font-size:0.9rem;cursor:pointer;">Tab ${n}</label>
+        </div>
+        <input type="text" id="tab${n}Name" placeholder="ឈ្មោះ Tab ${n}" maxlength="30" style="width:100%;padding:10px 14px;border:2px solid #bbb;border-radius:6px;font-size:0.95rem;font-family:inherit;color:#111;background:#fff;outline:none;">
+        <select id="tab${n}Icon" style="width:100%;padding:10px 14px;border:2px solid #bbb;border-radius:6px;font-size:0.9rem;font-family:inherit;color:#111;background:#fff;cursor:pointer;">${iconOptions}</select>
+      </div>`);
+  }
+}
 
 // ─── Init ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+  renderExtraCustomTabs();
   const check = await fetch('/api/admin/check');
   const data = await check.json();
   if (data.success) {
@@ -672,9 +700,13 @@ function updateCategoryDropdown(s) {
   const select = document.getElementById('productCategory');
   if (!select) return;
   // Update tab4/5/6 option labels
-  [4, 5, 6].forEach(n => {
-    const opt = select.querySelector(`option[value="tab${n}"]`);
-    if (!opt) return;
+  CUSTOM_TAB_NUMBERS.forEach(n => {
+    let opt = select.querySelector(`option[value="tab${n}"]`);
+    if (!opt) {
+      opt = document.createElement('option');
+      opt.value = `tab${n}`;
+      select.appendChild(opt);
+    }
     const name = s[`tab${n}_name`];
     const enabled = s[`tab${n}_enabled`];
     if (name && enabled) {
@@ -715,7 +747,7 @@ async function loadSettingsForm() {
     }
 
     // Load tab settings
-    [4, 5, 6].forEach(n => {
+    CUSTOM_TAB_NUMBERS.forEach(n => {
       const nameEl    = document.getElementById(`tab${n}Name`);
       const iconEl    = document.getElementById(`tab${n}Icon`);
       const enabledEl = document.getElementById(`tab${n}Enabled`);
@@ -751,7 +783,7 @@ async function handleSettingsSubmit(e) {
     fd.append('banner_desc',      document.getElementById('bannerDesc').value);
 
     // Tab settings
-    [4, 5, 6].forEach(n => {
+    CUSTOM_TAB_NUMBERS.forEach(n => {
       fd.append(`tab${n}_name`,    document.getElementById(`tab${n}Name`)?.value    || '');
       fd.append(`tab${n}_icon`,    document.getElementById(`tab${n}Icon`)?.value    || 'fas fa-tag');
       fd.append(`tab${n}_enabled`, document.getElementById(`tab${n}Enabled`)?.checked ? '1' : '0');

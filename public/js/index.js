@@ -140,18 +140,22 @@ function injectDynamicTabs(s) {
   const tabsContainer = document.getElementById('categoryTabs');
   if (!tabsContainer) return;
 
-  const dynamicTabs = [
-    { key: 'tab4', name: s.tab4_name, icon: s.tab4_icon, enabled: s.tab4_enabled },
-    { key: 'tab5', name: s.tab5_name, icon: s.tab5_icon, enabled: s.tab5_enabled },
-    { key: 'tab6', name: s.tab6_name, icon: s.tab6_icon, enabled: s.tab6_enabled },
-  ];
+  const dynamicTabs = Array.from({ length: 9 }, (_, index) => {
+    const number = index + 4;
+    return {
+      key: `tab${number}`,
+      name: s[`tab${number}_name`],
+      icon: s[`tab${number}_icon`],
+      enabled: s[`tab${number}_enabled`],
+    };
+  });
 
   dynamicTabs.forEach(tab => {
     // Only show if explicitly enabled (=1) AND has a custom name set (not default)
     if (!tab.enabled || parseInt(tab.enabled) !== 1) return;
     if (!tab.name || tab.name.trim() === '') return;
     // Hide if still using default name like "Tab 4", "Tab 5", "Tab 6"
-    if (/^Tab\s*[456]$/i.test(tab.name.trim())) return;
+    if (/^Tab\s*(?:[4-9]|1[0-2])$/i.test(tab.name.trim())) return;
     const btn = document.createElement('button');
     btn.className = 'tab-btn';
     btn.dataset.tab = tab.key;
