@@ -227,13 +227,23 @@ function applyFilters() {
 
   // 2. Search filter on top of tab
   if (query) {
-    const q = query.toLowerCase().replace(/[,\s]/g, '');
-    const qExpanded = q.replace(/(\d+(\.\d+)?)k/g, (_, n) => String(parseFloat(n) * 1000));
+    const rawQuery = query.toLowerCase().replace(/,/g, '').trim();
+    const q = rawQuery.replace(/\s/g, '');
+    const exactK = rawQuery.match(/^(\d+(?:\.\d+)?)\s*k$/i);
     filtered = filtered.filter(p => {
-      const name = (p.name || '').toLowerCase().replace(/[,\s]/g, '');
-      const desc = (p.description || '').toLowerCase().replace(/[,\s]/g, '');
-      return name.includes(q) || desc.includes(q) ||
-             name.includes(qExpanded) || desc.includes(qExpanded);
+      const searchableText = `${p.name || ''} ${p.description || ''}`.toLowerCase().replace(/,/g, '');
+
+      if (exactK) {
+        const requestedK = Number(exactK[1]);
+        const requestedFull = requestedK * 1000;
+        const kValues = [...searchableText.matchAll(/(\d+(?:\.\d+)?)\s*k\b/gi)]
+          .map(match => Number(match[1]));
+        const numberValues = (searchableText.match(/\d+(?:\.\d+)?/g) || [])
+          .map(Number);
+        return kValues.includes(requestedK) || numberValues.includes(requestedFull);
+      }
+
+      return searchableText.replace(/\s/g, '').includes(q);
     });
     updateResultCount(filtered.length);
   }
