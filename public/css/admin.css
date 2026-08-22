@@ -110,6 +110,12 @@ body {
 
 .form-group textarea { resize: vertical; min-height: 80px; }
 
+#productDesc {
+  min-height: 150px;
+  line-height: 1.6;
+  padding: 12px 14px;
+}
+
 .form-row {
   display: flex;
   gap: 12px;
