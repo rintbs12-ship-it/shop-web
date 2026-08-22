@@ -184,8 +184,14 @@ async function loadProduct(id) {
         </div>`;
     }
 
-    // Show Buy Button (always show)
-    document.getElementById('buyNowBtn').style.display = 'flex';
+    const buyButton = document.getElementById('buyNowBtn');
+    buyButton.style.display = 'flex';
+    if (Number(currentProduct.is_sold) === 1) {
+      buyButton.disabled = true;
+      buyButton.innerHTML = '<i class="fas fa-check-circle"></i> បានលក់ចេញ';
+      buyButton.style.opacity = '0.65';
+      buyButton.style.cursor = 'not-allowed';
+    }
 
     // Setup lightbox
     if (images.length > 0) setupLightbox(images);

@@ -217,8 +217,12 @@ function applyFilters() {
   let filtered = allProducts;
 
   // 1. Tab filter
-  if (activeTab !== 'all') {
-    filtered = filtered.filter(p => (p.category || 'all') === activeTab);
+  if (activeTab === 'sold') {
+    filtered = filtered.filter(p => Number(p.is_sold) === 1);
+  } else if (activeTab === 'all') {
+    filtered = filtered.filter(p => Number(p.is_sold) !== 1);
+  } else {
+    filtered = filtered.filter(p => Number(p.is_sold) !== 1 && (p.category || 'all') === activeTab);
   }
 
   // 2. Search filter on top of tab
@@ -258,6 +262,10 @@ function renderProducts(products) {
     const discountBadge = discount > 0
       ? `<div class="product-card-discount">-${discount}%</div>`
       : '';
+    const sold = Number(p.is_sold) === 1;
+    const soldBadge = sold
+      ? '<div class="product-card-sold"><i class="fas fa-check-circle"></i> បានលក់ចេញ</div>'
+      : '';
 
     const priceHtml = discount > 0
       ? `<div class="product-card-price-wrap">
@@ -273,13 +281,14 @@ function renderProducts(products) {
     return `
       <a href="/product/${p.id}" class="product-card">
         ${discountBadge}
+        ${soldBadge}
         ${imageHtml}
         <div class="product-card-body">
           <div class="product-card-name">${escHtml(p.name)}</div>
           ${priceHtml}
         </div>
-        <div class="product-card-btn">
-          <i class="fas fa-eye"></i> មើលលម្អិត
+        <div class="product-card-btn ${sold ? 'sold' : ''}">
+          <i class="fas ${sold ? 'fa-check-circle' : 'fa-eye'}"></i> ${sold ? 'បានលក់ចេញ' : 'មើលលម្អិត'}
         </div>
       </a>
     `;

@@ -40,6 +40,7 @@ async function initDB() {
         telegram_link TEXT,
         discount INTEGER DEFAULT 0,
         category TEXT DEFAULT 'all',
+        is_sold INTEGER DEFAULT 0,
         is_active INTEGER DEFAULT 1,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -100,6 +101,7 @@ async function initDB() {
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS telegram_link TEXT`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS discount INTEGER DEFAULT 0`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS category TEXT DEFAULT 'all'`,
+      `ALTER TABLE products ADD COLUMN IF NOT EXISTS is_sold INTEGER DEFAULT 0`,
       `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS banner_title TEXT`,
       `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS banner_desc TEXT`,
       `ALTER TABLE shop_settings ADD COLUMN IF NOT EXISTS banner_image TEXT`,

@@ -192,13 +192,13 @@ app.post('/api/admin/products', requireAuth, (req, res) => {
   uploadProducts.fields([{ name: 'images', maxCount: 10 }])(req, res, async (err) => {
     if (err) return res.status(400).json({ success: false, message: err.message });
     try {
-      const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, link_button_text, link_button_icon, telegram_link, discount, category } = req.body;
+      const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, link_button_text, link_button_icon, telegram_link, discount, category, is_sold } = req.body;
       if (!name || !price) return res.status(400).json({ success: false, message: 'ឈ្មោះ និងតម្លៃត្រូវការ!' });
 
       const result = await pool.query(`
-        INSERT INTO products (name, description, price, currency, bank_name, account_name, account_number, phone_number, page_link, link_button_text, link_button_icon, telegram_link, discount, category)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING id
-      `, [name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', link_button_text || 'មើលព័ត៌មានបន្ថែម', link_button_icon || 'fas fa-external-link-alt', telegram_link || '', parseInt(discount) || 0, category || 'all']);
+        INSERT INTO products (name, description, price, currency, bank_name, account_name, account_number, phone_number, page_link, link_button_text, link_button_icon, telegram_link, discount, category, is_sold)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id
+      `, [name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '', account_number || '', phone_number || '', page_link || '', link_button_text || 'មើលព័ត៌មានបន្ថែម', link_button_icon || 'fas fa-external-link-alt', telegram_link || '', parseInt(discount) || 0, category || 'all', String(is_sold) === '1' ? 1 : 0]);
 
       const productId = result.rows[0].id;
 
@@ -216,15 +216,15 @@ app.post('/api/admin/products', requireAuth, (req, res) => {
 
 app.put('/api/admin/products/:id', requireAuth, async (req, res) => {
   try {
-    const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, link_button_text, link_button_icon, telegram_link, discount, category, is_active } = req.body;
+    const { name, description, price, currency, account_name, account_number, bank_name, phone_number, page_link, link_button_text, link_button_icon, telegram_link, discount, category, is_active, is_sold } = req.body;
     await pool.query(`
       UPDATE products SET name=$1, description=$2, price=$3, currency=$4, bank_name=$5, account_name=$6,
         account_number=$7, phone_number=$8, page_link=$9, telegram_link=$10, discount=$11, category=$12,
-        is_active=$13, link_button_text=$14, link_button_icon=$15, updated_at=CURRENT_TIMESTAMP WHERE id=$16
+        is_active=$13, link_button_text=$14, link_button_icon=$15, is_sold=$16, updated_at=CURRENT_TIMESTAMP WHERE id=$17
     `, [name, description || '', parseFloat(price), currency || 'USD', bank_name || '', account_name || '',
         account_number || '', phone_number || '', page_link || '', telegram_link || '',
         parseInt(discount) || 0, category || 'all', is_active !== undefined ? is_active : 1,
-        link_button_text || 'មើលព័ត៌មានបន្ថែម', link_button_icon || 'fas fa-external-link-alt', req.params.id]);
+        link_button_text || 'មើលព័ត៌មានបន្ថែម', link_button_icon || 'fas fa-external-link-alt', String(is_sold) === '1' ? 1 : 0, req.params.id]);
     res.json({ success: true, message: 'Product បានកែប្រែ!' });
   } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 });
@@ -390,7 +390,7 @@ app.post('/api/orders', async (req, res) => {
     }
 
     // Get product info
-    const productRes = await pool.query('SELECT * FROM products WHERE id = $1 AND is_active = 1', [product_id]);
+    const productRes = await pool.query('SELECT * FROM products WHERE id = $1 AND is_active = 1 AND COALESCE(is_sold, 0) = 0', [product_id]);
     if (productRes.rows.length === 0) return res.status(404).json({ success: false, message: 'Product not found' });
     const p = productRes.rows[0];
 

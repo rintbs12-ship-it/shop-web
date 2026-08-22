@@ -283,6 +283,7 @@ async function loadProducts() {
             <span class="badge ${p.is_active ? 'badge-active' : 'badge-inactive'}">
               ${p.is_active ? 'Active' : 'Hidden'}
             </span>
+            ${Number(p.is_sold) === 1 ? '<span class="badge badge-inactive"><i class="fas fa-check-circle"></i> Sold</span>' : ''}
             <span class="badge badge-images"><i class="fas fa-image"></i> ${p.image_count}</span>
             ${p.qr_image ? `<span class="badge badge-qr"><i class="fas fa-qrcode"></i> QR</span>` : ''}
           </div>
@@ -315,6 +316,7 @@ function openAddProductModal() {
   document.getElementById('productForm').reset();
   document.getElementById('productId').value = '';
   document.getElementById('productCategory').value = 'all';
+  document.getElementById('productSold').checked = false;
   document.getElementById('productLinkButtonIcon').value = 'fas fa-external-link-alt';
 
   // Auto-fill saved payment info
@@ -353,6 +355,7 @@ async function openEditModal(id) {
     document.getElementById('productDiscount').value = p.discount || 0;
     document.getElementById('productCurrency').value = p.currency || 'USD';
     document.getElementById('productCategory').value = p.category || 'all';
+    document.getElementById('productSold').checked = Number(p.is_sold) === 1;
     document.getElementById('productDesc').value = p.description || '';
     document.getElementById('productBankName').value = p.bank_name || '';
     document.getElementById('productAccountName').value = p.account_name || '';
@@ -485,6 +488,7 @@ async function saveProduct() {
           currency: document.getElementById('productCurrency').value,
           discount: document.getElementById('productDiscount').value || 0,
           category: document.getElementById('productCategory').value || 'all',
+          is_sold: document.getElementById('productSold').checked ? 1 : 0,
           description: document.getElementById('productDesc').value,
           bank_name: document.getElementById('productBankName').value,
           account_name: document.getElementById('productAccountName').value,
@@ -524,6 +528,7 @@ async function saveProduct() {
       fd.append('currency', document.getElementById('productCurrency').value);
       fd.append('discount', document.getElementById('productDiscount').value || 0);
       fd.append('category', document.getElementById('productCategory').value || 'all');
+      fd.append('is_sold', document.getElementById('productSold').checked ? '1' : '0');
       fd.append('description', document.getElementById('productDesc').value);
       fd.append('bank_name', document.getElementById('productBankName').value);
       fd.append('account_name', document.getElementById('productAccountName').value);
