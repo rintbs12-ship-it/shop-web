@@ -229,13 +229,15 @@ function applyFilters() {
   if (query) {
     const rawQuery = query.toLowerCase().replace(/,/g, '').trim();
     const q = rawQuery.replace(/\s/g, '');
-    const exactK = rawQuery.match(/^(\d+(?:\.\d+)?)\s*k$/i);
+    const exactQuantity = rawQuery.match(/^(\d+(?:\.\d+)?)\s*(k)?$/i);
     filtered = filtered.filter(p => {
       const searchableText = `${p.name || ''} ${p.description || ''}`.toLowerCase().replace(/,/g, '');
 
-      if (exactK) {
-        const requestedK = Number(exactK[1]);
-        const requestedFull = requestedK * 1000;
+      if (exactQuantity) {
+        const inputNumber = Number(exactQuantity[1]);
+        const hasK = !!exactQuantity[2];
+        const requestedK = hasK || inputNumber < 1000 ? inputNumber : inputNumber / 1000;
+        const requestedFull = hasK || inputNumber < 1000 ? inputNumber * 1000 : inputNumber;
         const kValues = [...searchableText.matchAll(/(\d+(?:\.\d+)?)\s*k\b/gi)]
           .map(match => Number(match[1]));
         const numberValues = (searchableText.match(/\d+(?:\.\d+)?/g) || [])
