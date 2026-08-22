@@ -118,6 +118,44 @@ body {
 .form-row .form-group { flex: 1; }
 .form-row .form-group.flex-2 { flex: 2; }
 
+.sold-stock-control {
+  margin-top: 4px;
+}
+
+.sold-stock-toggle {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 58px;
+  padding: 10px 14px;
+  border: 2px solid #ffb74d;
+  border-radius: 9px;
+  background: #fff8e1;
+  color: #8a4b00;
+  cursor: pointer;
+}
+
+.sold-stock-toggle input {
+  width: 22px !important;
+  height: 22px !important;
+  flex: 0 0 22px;
+  accent-color: #ef6c00;
+}
+
+.sold-stock-icon {
+  font-size: 1.3rem;
+  color: #ef6c00;
+}
+
+.sold-stock-toggle strong,
+.sold-stock-toggle small {
+  display: block;
+}
+
+.sold-stock-toggle strong { font-size: 0.95rem; }
+.sold-stock-toggle small { margin-top: 2px; color: #8b6b45; font-size: 0.76rem; }
+
 .btn-login {
   width: 100%;
   padding: 12px;

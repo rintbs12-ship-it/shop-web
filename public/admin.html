@@ -371,13 +371,18 @@
               <option value="tab6">Tab 6</option>
             </select>
           </div>
-          <div class="form-group" style="max-width:145px">
-            <label>ស្ថានភាព Stock</label>
-            <label style="display:flex;align-items:center;gap:7px;height:42px;padding:0 10px;border:2px solid #ddd;border-radius:6px;cursor:pointer;white-space:nowrap;">
-              <input type="checkbox" id="productSold" style="width:18px;height:18px;accent-color:#e53935;">
-              បានលក់ចេញ
-            </label>
-          </div>
+        </div>
+
+        <div class="form-group sold-stock-control">
+          <label>ស្ថានភាព Stock</label>
+          <label class="sold-stock-toggle" for="productSold">
+            <input type="checkbox" id="productSold">
+            <span class="sold-stock-icon"><i class="fas fa-check-circle"></i></span>
+            <span>
+              <strong>បានលក់ចេញ (Sold Out)</strong>
+              <small>ធីកទីនេះ ដើម្បីបង្ហាញ Product ក្នុង Tab បានលក់ចេញ</small>
+            </span>
+          </label>
         </div>
 
         <div class="form-group">
