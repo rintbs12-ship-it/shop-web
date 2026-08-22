@@ -1190,6 +1190,21 @@ body {
   box-shadow: 0 3px 12px rgba(229,57,53,0.35);
 }
 
+.tab-btn[data-tab="sold"] {
+  background: #fff3e0;
+  border-color: #ff9800;
+  color: #d85d00;
+  box-shadow: 0 2px 7px rgba(239,108,0,0.16);
+}
+
+.tab-btn[data-tab="sold"]:hover,
+.tab-btn[data-tab="sold"].active {
+  background: linear-gradient(135deg, #ff9800, #ef6c00);
+  border-color: #ef6c00;
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(239,108,0,0.35);
+}
+
 .tab-btn i { font-size: 0.85rem; }
 
 @media (max-width: 768px) {
