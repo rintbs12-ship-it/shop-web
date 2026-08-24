@@ -47,6 +47,9 @@
       <a href="#" class="nav-item active" data-page="products">
         <i class="fas fa-box"></i> <span>Products</span>
       </a>
+      <a href="#" class="nav-item nav-sold-out" data-page="soldout">
+        <i class="fas fa-circle-check"></i> <span>Sold Out</span>
+      </a>
       <a href="#" class="nav-item" data-page="orders">
         <i class="fas fa-shopping-cart"></i> <span>Orders</span>
       </a>
@@ -98,6 +101,15 @@
     </div>
 
     <!-- ═══════════════════ PAGE: ORDERS ════════════════════ -->
+    <div id="page-soldout" class="page">
+      <div class="page-header">
+        <h2><i class="fas fa-circle-check"></i> Sold Out Products</h2>
+      </div>
+      <div class="products-grid" id="adminSoldProductsGrid">
+        <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+      </div>
+    </div>
+
     <div id="page-orders" class="page">
       <div class="page-header">
         <h2><i class="fas fa-shopping-cart"></i> គ្រប់គ្រង Orders</h2>

@@ -239,8 +239,11 @@ function navigateTo(page) {
   document.getElementById(`page-${page}`).classList.add('active');
   document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
 
-  const titles = { products: 'Products', orders: 'Orders', settings: 'Settings', password: 'Change Password' };
+  const titles = { products: 'Products', soldout: 'Sold Out', orders: 'Orders', settings: 'Settings', password: 'Change Password' };
   document.getElementById('pageTitle').textContent = titles[page] || page;
+
+  if (page === 'products') loadProducts('available');
+  if (page === 'soldout') loadProducts('sold');
 
   // Load orders when navigating to orders page
   if (page === 'orders') loadOrders();
@@ -250,27 +253,32 @@ function navigateTo(page) {
 }
 
 // ─── Load Products ─────────────────────────────────────
-async function loadProducts() {
-  const grid = document.getElementById('adminProductsGrid');
+async function loadProducts(mode = 'available') {
+  const isSoldView = mode === 'sold';
+  const grid = document.getElementById(isSoldView ? 'adminSoldProductsGrid' : 'adminProductsGrid');
   grid.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> កំពុងផ្ទុក...</div>`;
 
   try {
     const res = await fetch('/api/admin/products');
     const data = await res.json();
 
-    if (!data.success || data.data.length === 0) {
+    const products = data.success
+      ? data.data.filter(p => isSoldView ? Number(p.is_sold) === 1 : Number(p.is_sold) !== 1)
+      : [];
+
+    if (products.length === 0) {
       grid.innerHTML = `
         <div class="empty-state">
-          <i class="fas fa-box-open"></i>
-          <p>មិនទាន់មាន Product ណាមួយ</p>
-          <button class="btn-primary" onclick="openAddProductModal()">
+          <i class="fas ${isSoldView ? 'fa-circle-check' : 'fa-box-open'}"></i>
+          <p>${isSoldView ? 'មិនទាន់មាន Product ដែលលក់ចេញ' : 'មិនទាន់មាន Product ណាមួយ'}</p>
+          ${isSoldView ? '' : `<button class="btn-primary" onclick="openAddProductModal()">
             <i class="fas fa-plus"></i> បន្ថែម Product ដំបូង
-          </button>
+          </button>`}
         </div>`;
       return;
     }
 
-    grid.innerHTML = data.data.map(p => `
+    grid.innerHTML = products.map(p => `
       <div class="admin-product-card ${p.is_active ? '' : 'inactive'}">
         ${p.main_image
           ? `<img class="admin-card-image" src="${p.main_image}" alt="${escHtml(p.name)}" loading="lazy">`
@@ -288,6 +296,13 @@ async function loadProducts() {
             ${p.qr_image ? `<span class="badge badge-qr"><i class="fas fa-qrcode"></i> QR</span>` : ''}
           </div>
           <div class="admin-card-actions">
+            ${isSoldView
+              ? `<button class="btn-restore" onclick="toggleSoldStatus(${p.id}, 0)">
+                  <i class="fas fa-undo"></i> ដាក់លក់វិញ
+                </button>`
+              : `<button class="btn-sold" onclick="toggleSoldStatus(${p.id}, 1)">
+                  <i class="fas fa-circle-check"></i> Sold Out
+                </button>`}
             <button class="btn-edit" onclick="openEditModal(${p.id})">
               <i class="fas fa-edit"></i> Edit
             </button>
@@ -304,6 +319,26 @@ async function loadProducts() {
 
   } catch (err) {
     grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>មានបញ្ហា</p></div>`;
+  }
+}
+
+function reloadCurrentProductPage() {
+  return loadProducts(currentPage === 'soldout' ? 'sold' : 'available');
+}
+
+async function toggleSoldStatus(id, isSold) {
+  try {
+    const res = await fetch(`/api/admin/products/${id}/sold`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ is_sold: isSold })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message || 'Update failed');
+    showToast(isSold ? 'បានផ្លាស់ Product ទៅ Sold Out!' : 'បានដាក់ Product លក់វិញ!', 'success');
+    await reloadCurrentProductPage();
+  } catch (err) {
+    showToast(err.message || 'មានបញ្ហា', 'error');
   }
 }
 
@@ -566,7 +601,7 @@ async function saveProduct() {
     }
 
     closeProductModal();
-    loadProducts();
+    reloadCurrentProductPage();
 
   } catch (err) {
     showToast(err.message || 'មានបញ្ហា', 'error');
@@ -585,7 +620,7 @@ async function deleteProduct(id, name) {
     const data = await res.json();
     if (data.success) {
       showToast('Product បានលុប!', 'success');
-      loadProducts();
+      reloadCurrentProductPage();
     } else {
       showToast(data.message || 'មានបញ្ហា', 'error');
     }
@@ -605,7 +640,7 @@ function closeImagesModal() {
   document.getElementById('imagesModal').classList.remove('open');
   managingImagesProductId = null;
   document.getElementById('addMoreImages').value = '';
-  loadProducts();
+  reloadCurrentProductPage();
 }
 
 async function loadManageImages(productId) {

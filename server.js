@@ -229,6 +229,22 @@ app.put('/api/admin/products/:id', requireAuth, async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 });
 
+app.patch('/api/admin/products/:id/sold', requireAuth, async (req, res) => {
+  try {
+    const isSold = String(req.body.is_sold) === '1' ? 1 : 0;
+    const result = await pool.query(
+      'UPDATE products SET is_sold=$1, updated_at=CURRENT_TIMESTAMP WHERE id=$2 RETURNING id',
+      [isSold, req.params.id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+    res.json({ success: true, is_sold: isSold });
+  } catch (e) {
+    res.status(500).json({ success: false, message: e.message });
+  }
+});
+
 app.delete('/api/admin/products/:id', requireAuth, async (req, res) => {
   try {
     const product = await pool.query('SELECT * FROM products WHERE id = $1', [req.params.id]);

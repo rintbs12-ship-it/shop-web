@@ -258,6 +258,14 @@ body {
 
 .nav-item i { width: 20px; text-align: center; }
 
+.nav-sold-out { color: #ffcc80; }
+.nav-sold-out:hover,
+.nav-sold-out.active {
+  background: rgba(255,152,0,0.16);
+  color: white;
+  border-left-color: #ff9800;
+}
+
 .sidebar-footer {
   padding: 16px;
   border-top: 1px solid rgba(255,255,255,0.1);
@@ -455,6 +463,33 @@ body {
 }
 
 .btn-images:hover { background: #2e7d32; color: white; }
+
+.btn-sold,
+.btn-restore {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-sold {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffcc80;
+}
+.btn-sold:hover { background: #f57c00; color: white; }
+
+.btn-restore {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+}
+.btn-restore:hover { background: #2e7d32; color: white; }
 
 /* ─── Card ────────────────────────────────────────────── */
 .card {
