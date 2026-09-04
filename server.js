@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-const { sendOrderConfirmation, notifyAdminNewOrder } = require('./bot');
+const { sendOrderConfirmation, notifyAdminNewOrder, setupTelegramWebhook } = require('./bot');
 
 const app = express();
 const pool = require('./database');
@@ -38,6 +38,9 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
+
+app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
+setupTelegramWebhook(app);
 
 // ─── Cloudinary Storage ───────────────────────────────────────────────────────
 const makeCloudStorage = (folder) => new CloudinaryStorage({

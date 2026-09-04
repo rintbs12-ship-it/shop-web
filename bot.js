@@ -3,15 +3,18 @@
 // ═══════════════════════════════════════════════════════
 
 const TelegramBot = require('node-telegram-bot-api').default || require('node-telegram-bot-api');
+const crypto = require('crypto');
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_CHAT_ID = process.env.TELEGRAM_ADMIN_CHAT_ID;
+const APP_URL = String(process.env.APP_URL || '').trim().replace(/\/$/, '');
 
 let bot = null;
 
 if (TOKEN) {
-  // Polling is required for Telegram inline-button callbacks.
-  bot = new TelegramBot(TOKEN, { polling: Boolean(ADMIN_CHAT_ID) });
+  // A webhook lets Telegram wake a sleeping free production instance.
+  // Local development falls back to polling when APP_URL is not configured.
+  bot = new TelegramBot(TOKEN, { polling: Boolean(ADMIN_CHAT_ID && !APP_URL) });
   console.log('✅ Telegram Bot initialized');
 } else {
   console.warn('⚠️  TELEGRAM_BOT_TOKEN not set — bot disabled');
@@ -124,8 +127,10 @@ if (bot && ADMIN_CHAT_ID) {
     const match = /^(order_confirm|order_cancel):(\d+)$/.exec(query.data || '');
     if (!match) return;
 
-    // Only the configured admin is allowed to change an order.
-    if (String(query.from?.id) !== String(ADMIN_CHAT_ID)) {
+    // Accept actions only from the configured private chat or admin group.
+    const allowedChat = String(query.message?.chat?.id) === String(ADMIN_CHAT_ID);
+    const allowedUser = String(query.from?.id) === String(ADMIN_CHAT_ID);
+    if (!allowedChat && !allowedUser) {
       await bot.answerCallbackQuery(query.id, {
         text: 'អ្នកមិនមានសិទ្ធិគ្រប់គ្រង Order នេះទេ',
         show_alert: true
@@ -182,6 +187,31 @@ if (bot && ADMIN_CHAT_ID) {
   });
 }
 
+function setupTelegramWebhook(app) {
+  if (!bot || !APP_URL) return;
+
+  const webhookSecret = String(
+    process.env.TELEGRAM_WEBHOOK_SECRET ||
+    crypto.createHash('sha256').update(TOKEN).digest('hex').slice(0, 32)
+  ).replace(/[^A-Za-z0-9_-]/g, '');
+  const webhookPath = `/api/telegram/webhook/${webhookSecret}`;
+  const webhookUrl = `${APP_URL}${webhookPath}`;
+
+  app.post(webhookPath, (req, res) => {
+    try {
+      bot.processUpdate(req.body);
+      res.sendStatus(200);
+    } catch (err) {
+      console.error('Telegram webhook update error:', err.message);
+      res.sendStatus(500);
+    }
+  });
+
+  bot.setWebHook(webhookUrl)
+    .then(() => console.log(`✅ Telegram webhook enabled: ${APP_URL}`))
+    .catch(err => console.error('❌ Telegram webhook setup error:', err.message));
+}
+
 // ─── Helpers ──────────────────────────────────────────
 function normalizeTelegram(username) {
   if (!username) return null;
@@ -196,4 +226,4 @@ function escMd(str) {
   return String(str).replace(/[_*[\]()~`>#+=|{}.!-]/g, '\\$&');
 }
 
-module.exports = { bot, sendOrderConfirmation, notifyAdminNewOrder };
+module.exports = { bot, sendOrderConfirmation, notifyAdminNewOrder, setupTelegramWebhook };
